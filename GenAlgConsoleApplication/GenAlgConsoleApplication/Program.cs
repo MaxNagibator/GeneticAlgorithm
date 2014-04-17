@@ -5,12 +5,13 @@ namespace GenAlgConsoleApplication
     internal class Program
     {
         private const int PERSON_COUNT = 10;
-        private const int GEN_COUNT = 8;
+        private const int GEN_COUNT = 2;
         private static int[,] _population;
 
         private static void Main(string[] args)
         {
-            //пусть вся область у нас будет числа от 0 до 255
+            //пусть вся область первого гена у нас будет числа от 0 до 255
+            //значение второго гена у нас будет от 50 до 100
             GenerateOdeyaloPopulation();
             PopulationShow("Odeyalo");
             GenerateDrobovikPopulation();
@@ -31,16 +32,14 @@ namespace GenAlgConsoleApplication
         private static void GenerateOdeyaloPopulation()
         {
             //некоторая заданная область будет у нас от 15 до (15 + PERSON_COUNT)
-            _population = new int[PERSON_COUNT, GEN_COUNT];
+            _population = new int[PERSON_COUNT,GEN_COUNT];
             const int startValue = 15;
+            const int start2GenValue = 65; //значение второго гена от 65 до 75
             for (int i = 0; i < PERSON_COUNT; i++)
             {
-                var currentValue = startValue + i;
-                for (int j = 0; j < GEN_COUNT; j++)
-                {
-                    _population[i, j] = currentValue%2;
-                    currentValue = currentValue/2;
-                }
+                // особь из 2-х генов. Если их должно быть больше, соответственно, изменить колич. процедур.
+                _population[i, 0] = startValue + i;
+                _population[i, 1] = start2GenValue + i;
             }
         }
 
@@ -85,7 +84,7 @@ namespace GenAlgConsoleApplication
                 Console.Write(i + ": ");
                 for (int j = 0; j < GEN_COUNT; j++)
                 {
-                    Console.Write(_population[i, j]);
+                    Console.Write(_population[i, j]+" ");
                 }
                 Console.WriteLine();
             }
