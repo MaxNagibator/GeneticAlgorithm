@@ -15,10 +15,19 @@ namespace GenAlgConsoleApplication
             PopulationShow("Odeyalo");
             GenerateDrobovikPopulation();
             PopulationShow("Drobovik");
-            GenerateFocusPopulation();
+            GenerateFocusPopulation()   ;
             PopulationShow("Focus");
         }
 
+        /* 1. Выбрать диапазон десятичных значений (напр. - от 15 до 25)
+            2. Создать цикл. Длина цикла - количество этих значений (особей).
+               В каждой итерации цикла закодировать это десятичное число, представляющее особь,
+               в двоичном формате. Т.о., получаем двоичный вектор, являющийся геномом особи.
+         * 
+         *  УТОЧНИТЬ: 
+         *  Делается выборка непрерывного диапазона или можно из разных частей?
+         *  Можно брать выборку не всех значений?
+         */
         private static void GenerateOdeyaloPopulation()
         {
             //некоторая заданная область будет у нас от 15 до (15 + PERSON_COUNT)
@@ -45,9 +54,10 @@ namespace GenAlgConsoleApplication
                 var currentValue = rnd.Next(0, 255);
                 for (int j = 0; j < GEN_COUNT; j++)
                 {
-                    _population[i, j] = currentValue%2;
-                    currentValue = currentValue/2;
+                    _population[i, j] = currentValue % 2;
+                    currentValue = currentValue / 2;
                 }
+                _population[i, 0] = currentValue;
             }
         }
 
