@@ -38,6 +38,8 @@ namespace GenAlgConsoleApplication
             for (int i = 0; i < PERSON_COUNT; i++)
             {
                 // особь из 2-х генов. Если их должно быть больше, соответственно, изменить колич. процедур.
+                // в данный момент получаем десятичные значения. Если нужно кодировать (1-й вариант), 
+                // - преобразовать в двоичный формат.
                 _population[i, 0] = startValue + i;
                 _population[i, 1] = start2GenValue + i;
             }
@@ -51,12 +53,9 @@ namespace GenAlgConsoleApplication
             for (int i = 0; i < PERSON_COUNT; i++)
             {
                 var currentValue = rnd.Next(0, 255);
-                for (int j = 0; j < GEN_COUNT; j++)
-                {
-                    _population[i, j] = currentValue % 2;
-                    currentValue = currentValue / 2;
-                }
+                var current2GenValue = rnd.Next(50, 100);
                 _population[i, 0] = currentValue;
+                _population[i, 1] = current2GenValue;
             }
         }
 
@@ -68,11 +67,9 @@ namespace GenAlgConsoleApplication
             for (int i = 0; i < PERSON_COUNT; i++)
             {
                 var currentValue = rnd.Next(50, 100);
-                for (int j = 0; j < GEN_COUNT; j++)
-                {
-                    _population[i, j] = currentValue%2;
-                    currentValue = currentValue/2;
-                }
+                var current2GenValue = rnd.Next(70, 93);
+                _population[i, 0] = currentValue;
+                _population[i, 1] = current2GenValue;
             }
         }
 
