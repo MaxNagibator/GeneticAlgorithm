@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace GenAlgConsoleApplication
 {
@@ -9,9 +10,9 @@ namespace GenAlgConsoleApplication
         private static int[,] _population;
         private static int[,] _populationAfterKrossingover;
         private static int[,] _tochkiRazriva;
-        //•	Одноточечного оператора
-        //•	Двухточечного
-        //•	Трёхточечного
+        //•	Одноточечного оператора +
+        //•	Двухточечного +
+        //•	Трёхточечного +
         //•	Универсального
         //•	Упорядочивающего одно- и двухточечный операторы кроссинговера
         //•	Частично-соответствующего одно- и двухточечному операторам кроссинговера
@@ -31,6 +32,8 @@ namespace GenAlgConsoleApplication
             PopulationsShowAfterKrossingoverDvuhtochechniy("После кроссинговера Двухточечного");
             KrossingoverTrehtochechniy();
             PopulationsShowAfterKrossingoverTrehtochechniy("После кроссинговера Трехточечного");
+            KrossingoverUporyadochenniyOdnotochechniy();
+            PopulationsShowAfterKrossingoverOdnotochechniy("После кроссинговера упорядоченного Одноточечного");
         }
 
         private static void GenerateDrobovikPopulation()
@@ -126,25 +129,91 @@ namespace GenAlgConsoleApplication
                 _tochkiRazriva[i/2, 0] = rnd.Next(0, GEN_COUNT + 1);
                 _tochkiRazriva[i/2, 1] = rnd.Next(0, GEN_COUNT + 1);
                 _tochkiRazriva[i/2, 2] = rnd.Next(0, GEN_COUNT + 1);
-                for (int x = 0; x < 2; x++)
-                {
-                    for (int y = 0; y < 2 - x; y++)
-                    {
-                        if (_tochkiRazriva[i/2, y] > _tochkiRazriva[i/2, y + 1])
-                        {
-                            var stakan = _tochkiRazriva[i/2, y];
-                            _tochkiRazriva[i/2, y] = _tochkiRazriva[i/2, y + 1];
-                            _tochkiRazriva[i/2, y + 1] = stakan;
-                        }
-                    }
-                } // сортирую точки разрыва пузырьком 
-
+                _tochkiRazriva = SortArray(_tochkiRazriva, i/2);
                 for (int j = 0; j < GEN_COUNT; j++)
                 {
                     if ((j >= _tochkiRazriva[i/2, 0] && j < _tochkiRazriva[i/2, 1]) || j >= _tochkiRazriva[i/2, 2])
                     {
                         _populationAfterKrossingover[i + 1, j] = _population[i, j];
                         _populationAfterKrossingover[i, j] = _population[i + 1, j];
+                    }
+                    else
+                    {
+                        _populationAfterKrossingover[i, j] = _population[i, j];
+                        _populationAfterKrossingover[i + 1, j] = _population[i + 1, j];
+                    }
+                }
+            }
+            Console.WriteLine();
+        }
+
+        private static int[,] SortArray(int[,] array, int i)
+        {
+            for (int x = 0; x < 2; x++)
+            {
+                for (int y = 0; y < 2 - x; y++)
+                {
+                    if (array[i, y] > array[i, y + 1])
+                    {
+                        var stakan = _tochkiRazriva[i, y];
+                        array[i, y] = array[i, y + 1];
+                        array[i, y + 1] = stakan;
+                    }
+                }
+            } // сортирую точки разрыва пузырьком 
+            return array;
+        }
+
+        private static void KrossingoverUporyadochenniyOdnotochechniy()
+        {
+            //Здесь «разрезающая» точка также выбирается случайно. Далее происходит копирование левого сегмента Р1 в Р'1. 
+            //Остальные позиции в Р'1 берутся из Р2 в упорядоченном виде слева направо, 
+            //исключая элементы, уже попавшие в Р'1. 
+            //Получение Р'2 может выполняться различными способами. Наиболее распространенный метод копирования левого сегмента из Р2, 
+            //а далее анализ Р1 методом, указанным выше. Тогда имеем P'2 : (G A B E | C D F H).
+            _populationAfterKrossingover = new int[PERSON_COUNT, GEN_COUNT];
+            _tochkiRazriva = new int[PERSON_COUNT/2, 1];
+            var rnd = new Random();
+            for (int i = 0; i < PERSON_COUNT; i += 2)
+            {
+                var tochkaRazriva = rnd.Next(0, GEN_COUNT + 1);
+                _tochkiRazriva[i/2, 0] = tochkaRazriva;
+                for (int j = 0; j < GEN_COUNT; j++)
+                {
+                    if (j >= tochkaRazriva)
+                    {
+                        for (int x = 0; x < j; x++) //поиск элемента из (популяции 2) которого ещё нету в популяции один, для добавления в (новую популяцию 1)
+                        {
+                            var isExists = false;
+                            for (int y = 0; y < j; y++)
+                            {
+                                if (_populationAfterKrossingover[i, y] == _population[i + 1, x])
+                                {
+                                    isExists = true;
+                                }
+                            }
+                            if (isExists == false)
+                            {
+                                _populationAfterKrossingover[i, j] = _population[i + 1, x];
+                                break;
+                            }
+                        }
+                        for (int x = 0; x < j; x++) //поиск элемента из (популяции 1) которого ещё нету в популяции один, для добавления в (новую популяцию 2)
+                        {
+                            var isExists = false;
+                            for (int y = 0; y < j; y++)
+                            {
+                                if (_populationAfterKrossingover[i + 1, y] == _population[i, x])
+                                {
+                                    isExists = true;
+                                }
+                            }
+                            if (isExists == false)
+                            {
+                                _populationAfterKrossingover[i + 1, j] = _population[i, x];
+                                break;
+                            }
+                        }
                     }
                     else
                     {
