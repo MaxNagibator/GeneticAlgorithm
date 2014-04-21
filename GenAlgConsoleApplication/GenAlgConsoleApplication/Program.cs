@@ -27,6 +27,23 @@ namespace GenAlgConsoleApplication
             PopulationsShow("Начальная популяция");
             KrossingoverOdnotochechniy();
             PopulationsShowAfterKrossingover("После кроссинговера Одноточечного");
+            KrossingoverDvuhtochechniy();
+            PopulationsShowAfterKrossingoverDvuhtochechniy("После кроссинговера Двухточечного");
+        }
+
+        private static void GenerateDrobovikPopulation()
+        {
+            //берём случайные от всего решения и каждому гену присваивем случайное число
+            _population = new int[PERSON_COUNT, GEN_COUNT];
+            var rnd = new Random();
+            for (int i = 0; i < PERSON_COUNT; i++)
+            {
+                for (int j = 0; j < GEN_COUNT; j++)
+                {
+                    var currentValue = rnd.Next(0, 255);
+                    _population[i, j] = currentValue;
+                }
+            }
         }
 
         private static void KrossingoverOdnotochechniy()
@@ -35,14 +52,12 @@ namespace GenAlgConsoleApplication
             //или разрезающая точка ОК, которая обычно определяется случайно.
             //Эта точка определяет место в двух хромосомах, где они должны быть «разрезаны».
             _populationAfterKrossingover = new int[PERSON_COUNT, GEN_COUNT];
-            _tochkiRazriva = new int[PERSON_COUNT];
-            //Console.Write("Точки разрыва: ");
+            _tochkiRazriva = new int[PERSON_COUNT/2];
             var rnd = new Random();
             for (int i = 0; i < PERSON_COUNT; i += 2)
             {
                 var tochkaRazriva = rnd.Next(0, GEN_COUNT + 1);
                 _tochkiRazriva[i/2] = tochkaRazriva;
-                //Console.Write("{0,1} ", tochkaRazriva);
                 for (int j = 0; j < GEN_COUNT; j++)
                 {
                     if (tochkaRazriva > j)
@@ -60,19 +75,41 @@ namespace GenAlgConsoleApplication
             Console.WriteLine();
         }
 
-        private static void GenerateDrobovikPopulation()
+        private static void KrossingoverDvuhtochechniy()
         {
-            //берём случайные от всего решения и каждому гену присваивем случайное число
-            _population = new int[PERSON_COUNT, GEN_COUNT];
+            //В каждой хромосоме определяются две точки ОК,
+            //и хромосомы обмениваются участками, расположенными между двумя точками ОК. 
+            _populationAfterKrossingover = new int[PERSON_COUNT, GEN_COUNT];
+            _tochkiRazriva = new int[PERSON_COUNT];
             var rnd = new Random();
-            for (int i = 0; i < PERSON_COUNT; i++)
+            for (int i = 0; i < PERSON_COUNT; i += 2)
             {
+                var tochkaRazriva1 = rnd.Next(0, GEN_COUNT + 1);
+                var tochkaRazriva2 = rnd.Next(0, GEN_COUNT + 1);
+                if (tochkaRazriva1 > tochkaRazriva2)
+                {
+                    var stakan = tochkaRazriva2;
+                    tochkaRazriva2 = tochkaRazriva1;
+                    tochkaRazriva1 = stakan;
+                }
+
+                _tochkiRazriva[i] = tochkaRazriva1;
+                _tochkiRazriva[i + 1] = tochkaRazriva2;
                 for (int j = 0; j < GEN_COUNT; j++)
                 {
-                    var currentValue = rnd.Next(0, 255);
-                    _population[i, j] = currentValue;
+                    if (tochkaRazriva2 > j && j >= tochkaRazriva1)
+                    {
+                        _populationAfterKrossingover[i + 1, j] = _population[i, j];
+                        _populationAfterKrossingover[i, j] = _population[i + 1, j];
+                    }
+                    else
+                    {
+                        _populationAfterKrossingover[i, j] = _population[i, j];
+                        _populationAfterKrossingover[i + 1, j] = _population[i + 1, j];
+                    }
                 }
             }
+            Console.WriteLine();
         }
 
         private static void PopulationsShow(string str)
@@ -102,6 +139,28 @@ namespace GenAlgConsoleApplication
                 PopulationShow(i + 1, _population);
                 Console.WriteLine();
                 Console.Write("ПОСЛЕ: точка разрыва=" + _tochkiRazriva[i/2] + "\r\n" + i + ": ");
+                PopulationShow(i, _populationAfterKrossingover);
+                Console.WriteLine();
+                Console.Write(i + 1 + ": ");
+                PopulationShow(i + 1, _populationAfterKrossingover);
+                Console.WriteLine("\r\n______________________________");
+            }
+        }
+
+        private static void PopulationsShowAfterKrossingoverDvuhtochechniy(string str)
+        {
+            //показываю для каждой пары популяций до и после значения и точки разрыва
+            Console.WriteLine(str);
+            for (int i = 0; i < PERSON_COUNT; i += 2)
+            {
+                Console.Write("ДО: \r\n" + i + ": ");
+                PopulationShow(i, _population);
+                Console.WriteLine();
+                Console.Write(i + 1 + ": ");
+                PopulationShow(i + 1, _population);
+                Console.WriteLine();
+                Console.Write("ПОСЛЕ: точки разрыва=" + _tochkiRazriva[i] + " " + _tochkiRazriva[i + 1] + "\r\n" + i +
+                              ": ");
                 PopulationShow(i, _populationAfterKrossingover);
                 Console.WriteLine();
                 Console.Write(i + 1 + ": ");
