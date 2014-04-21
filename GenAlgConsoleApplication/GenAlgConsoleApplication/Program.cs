@@ -14,29 +14,50 @@ namespace GenAlgConsoleApplication
         //•	Одноточечного оператора +
         //•	Двухточечного +
         //•	Трёхточечного +
-        //•	Универсального
+        //•	Универсального -
         //•	Упорядочивающего одно- и двухточечный операторы кроссинговера  +/-
-        //•	Частично-соответствующего одно- и двухточечному операторам кроссинговера
-        //•	Циклического оператора
+        //•	Частично-соответствующего одно- и двухточечному операторам кроссинговера +/-
+        //•	Циклического оператора +
         //•	«Жадного» оператора
         //•	Одно-, двух- и трёх точечного операторов на основе принципа «золотого сечения» и чисел Фибоначчи.
 
+        // Написать программу, реализующую работу основных операторов мутации и их разновидностей для различных видов хромосом и схем:
+        //а) простая мутация;
+        //б) точечная мутация;
+        //в) мутация обмена (одно- и двухточечная);
+        //г) мутация на основе принципа «золотого сечения»;
+        //д) мутация на основе чисел Фибоначчи;
+        //е) инверсия;
+        //ж) транслокация;
+        //з) делеция.
+
+
         private static void Main(string[] args)
         {
-            //пусть вся область всех генов у нас будет числа от 1 до 9
+            //пусть вся область всех генов у нас будет числа от 0 до 8
             //ВИД ГЕНА: числовой!
             GenerateDrobovikPopulation();
             PopulationsShow("Начальная популяция");
             KrossingoverOdnotochechniy();
-            PopulationsShowAfterKrossingoverOdnotochechniy("После кроссинговера Одноточечного");
+            PopulationsShowAfterAndBeforeKrossingover("После кроссинговера Одноточечного",1);
             KrossingoverDvuhtochechniy();
-            PopulationsShowAfterKrossingoverDvuhtochechniy("После кроссинговера Двухточечного");
+            PopulationsShowAfterAndBeforeKrossingover("После кроссинговера Двухточечного",2);
             KrossingoverTrehtochechniy();
-            PopulationsShowAfterKrossingoverTrehtochechniy("После кроссинговера Трехточечного");
+            PopulationsShowAfterAndBeforeKrossingover("После кроссинговера Трехточечного", 3);
             KrossingoverUporyadochenniyOdnotochechniy();
-            PopulationsShowAfterKrossingoverOdnotochechniy("После кроссинговера упорядоченного Одноточечного");
+            PopulationsShowAfterAndBeforeKrossingover("После кроссинговера упорядоченного Одноточечного",1);
             KrossingoverChastichSootvetOdnotochechniy();
-            PopulationsShowAfterKrossingoverOdnotochechniy("После кроссинговера частично-соответствующего Одноточечного");
+            PopulationsShowAfterAndBeforeKrossingover("После кроссинговера частично-соответствующего Одноточечного",1);
+            KrossingoverCiklicheskiy();
+            PopulationsShowAfterAndBeforeKrossingover("После кроссинговера Циклического",0);
+            MutationOdnotochechniy();
+            PopulationsShowAfterAndBeforeMutation("После мутации одноточечной", 1);
+            MutationDvuhtochechniy();
+            PopulationsShowAfterAndBeforeMutation("После мутации двухточечной", 2);
+            MutationInversiyaOdnoTochechnaya();
+            PopulationsShowAfterAndBeforeMutation("После мутации инверсии одноточечной", 1);
+            MutationInversiyaDvuhTochechnaya();
+            PopulationsShowAfterAndBeforeMutation("После мутации инверсии двухточечной", 2);
         }
 
         private static void GenerateDrobovikPopulation()
@@ -51,7 +72,7 @@ namespace GenAlgConsoleApplication
                 {
                     while (true)
                     {
-                        var currentValue = rnd.Next(1, 9);
+                        var currentValue = rnd.Next(0, 8);
                         if (!gen.Exists(g => g == currentValue))
                         {
                             gen.Add(currentValue);
@@ -124,7 +145,7 @@ namespace GenAlgConsoleApplication
                     else
                     {
                         newGen.Add(_population[i][j]);
-                        newGen2.Add(_population[i+1][j]);
+                        newGen2.Add(_population[i + 1][j]);
                     }
                     _populationAfterKrossingover.Add(newGen);
                     _populationAfterKrossingover.Add(newGen2);
@@ -175,7 +196,7 @@ namespace GenAlgConsoleApplication
             //Остальные позиции в Р'1 берутся из Р2 в упорядоченном виде слева направо, 
             //исключая элементы, уже попавшие в Р'1. 
             //Получение Р'2 может выполняться различными способами. Наиболее распространенный метод копирования левого сегмента из Р2, 
-            //а далее анализ Р1 методом, указанным выше. Тогда имеем P'2 : (G A B E | C D F H).
+            //а далее анализ Р1 методом, указанным выше. .
             _populationAfterKrossingover = new List<List<int>>();
             _tochkiRazriva = new List<List<int>>();
             var rnd = new Random();
@@ -190,15 +211,17 @@ namespace GenAlgConsoleApplication
                 {
                     if (j >= tochkiRazrivaSub[0])
                     {
-                        for (int x = 0; x < GEN_COUNT; x++) //поиск элемента из (популяции 2) которого ещё нету в популяции один, для добавления в (новую популяцию 1)
+                        for (int x = 0; x < GEN_COUNT; x++)
+                            //поиск элемента из (популяции 2) которого ещё нету в популяции один, для добавления в (новую популяцию 1)
                         {
-                            if (!newGen.Exists(g=>g == _population[i+1][x]))
+                            if (!newGen.Exists(g => g == _population[i + 1][x]))
                             {
                                 newGen.Add(_population[i + 1][x]);
                                 break;
                             }
                         }
-                        for (int x = 0; x < GEN_COUNT; x++) //поиск элемента из (популяции 1) которого ещё нету в популяции один, для добавления в (новую популяцию 2)
+                        for (int x = 0; x < GEN_COUNT; x++)
+                            //поиск элемента из (популяции 1) которого ещё нету в популяции один, для добавления в (новую популяцию 2)
                         {
                             if (!newGen2.Exists(g => g == _population[i][x]))
                             {
@@ -268,16 +291,162 @@ namespace GenAlgConsoleApplication
                     var index = j;
                     while (true)
                     {
-                        if (!newGen2.Exists(g => g == _population[i+1][index]))
+                        if (!newGen2.Exists(g => g == _population[i + 1][index]))
                         {
-                            newGen2[j] = _population[i+1][index];
+                            newGen2[j] = _population[i + 1][index];
                             break;
                         }
-                        index = newGen2.IndexOf(_population[i+1][index]);
+                        index = newGen2.IndexOf(_population[i + 1][index]);
                     }
                 }
                 _populationAfterKrossingover.Add(newGen);
                 _populationAfterKrossingover.Add(newGen2);
+            }
+        }
+
+        private static void KrossingoverCiklicheskiy()
+        {
+            //Перед началом работы одноточечного оператора кроссинговера определяется так называемая точка ОК, 
+            //или разрезающая точка ОК, которая обычно определяется случайно.
+            //Эта точка определяет место в двух хромосомах, где они должны быть «разрезаны».
+
+            _populationAfterKrossingover = new List<List<int>>();
+            _tochkiRazriva = new List<List<int>>();
+            var rnd = new Random();
+            for (var i = 0; i < PERSON_COUNT; i += 2)
+            {
+                var tochkiRazrivaSub = new List<int>();
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT + 1));
+                _tochkiRazriva.Add(tochkiRazrivaSub);
+                var newGen = new List<int>();
+                var newGen2 = new List<int>();
+                for (int j = 0; j < GEN_COUNT; j++)
+                {
+                    newGen.Add(-1);
+                    newGen2.Add(-1);
+                }
+                for (var j = 0; j < GEN_COUNT; j++)
+                {
+                    newGen[_population[i][j]] = _population[i + 1][j];
+                    newGen2[_population[i + 1][j]] = _population[i][j];
+                }
+                _populationAfterKrossingover.Add(newGen);
+                _populationAfterKrossingover.Add(newGen2);
+            }
+        }
+
+        private static void MutationOdnotochechniy()
+        {
+            //При его реализации случайно выбирают ген в родительской хромосоме и, 
+            //обменивая его на рядом расположенный ген, получают хромосому потомка
+
+            _populationAfterKrossingover = new List<List<int>>();
+            _tochkiRazriva = new List<List<int>>();
+            var rnd = new Random();
+            for (var i = 0; i < PERSON_COUNT; i ++)
+            {
+                var tochkiRazrivaSub = new List<int>();
+                tochkiRazrivaSub.Add(rnd.Next(1, GEN_COUNT));
+                _tochkiRazriva.Add(tochkiRazrivaSub);
+                var newGen = new List<int>();
+                for (var j = 0; j < GEN_COUNT; j++)
+                {
+                        newGen.Add(_population[i][j]);
+                }
+                var stakan = newGen[tochkiRazrivaSub[0] - 1];
+                newGen[tochkiRazrivaSub[0] - 1] = newGen[tochkiRazrivaSub[0]];
+                newGen[tochkiRazrivaSub[0]] = stakan;
+
+                _populationAfterKrossingover.Add(newGen);
+            }
+        }
+
+        private static void MutationDvuhtochechniy()
+        {
+            //При реализации двухточечного ОМ случайным или направленным образом выбираются две точки разреза.
+            //Затем производится перестановка генов между собой, расположенных справа от точек разреза. 
+
+            _populationAfterKrossingover = new List<List<int>>();
+            _tochkiRazriva = new List<List<int>>();
+            var rnd = new Random();
+            for (var i = 0; i < PERSON_COUNT; i++)
+            {
+                var tochkiRazrivaSub = new List<int>();
+                tochkiRazrivaSub.Add(rnd.Next(1, GEN_COUNT-1));
+                tochkiRazrivaSub.Add(rnd.Next(1, GEN_COUNT-1));
+                _tochkiRazriva.Add(tochkiRazrivaSub);
+                var newGen = new List<int>();
+                for (var j = 0; j < GEN_COUNT; j++)
+                {
+                    newGen.Add(_population[i][j]);
+                }
+                var stakan = newGen[tochkiRazrivaSub[1]];
+                newGen[tochkiRazrivaSub[1]] = newGen[tochkiRazrivaSub[0]];
+                newGen[tochkiRazrivaSub[0]] = stakan;
+
+                _populationAfterKrossingover.Add(newGen);
+            }
+        }
+
+        private static void MutationInversiyaOdnoTochechnaya()
+        {
+            //Языковая конструкция, позволяющая на основе инвертирования родительской хромосомы 
+            //(или ее части) создавать хромосому потомка. При его реализации случайным образом 
+            //определяется одна или несколько точек разреза (инверсии), внутри которых элементы инвертируются.
+            _populationAfterKrossingover = new List<List<int>>();
+            _tochkiRazriva = new List<List<int>>();
+            var rnd = new Random();
+            for (var i = 0; i < PERSON_COUNT; i++)
+            {
+                var tochkiRazrivaSub = new List<int>();
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT - 1));
+                _tochkiRazriva.Add(tochkiRazrivaSub);
+                var newGen = new List<int>();
+
+                for (var j = 0; j < GEN_COUNT; j++)
+                {
+                    if(j<tochkiRazrivaSub[0])
+                    {
+                        newGen.Add(_population[i][j]);
+                    }
+                    else
+                    {
+                         newGen.Add(_population[i][GEN_COUNT-j+tochkiRazrivaSub[0]-1]);
+                    }
+                }
+                _populationAfterKrossingover.Add(newGen);
+            }
+        }
+
+        private static void MutationInversiyaDvuhTochechnaya()
+        {
+            //Языковая конструкция, позволяющая на основе инвертирования родительской хромосомы 
+            //(или ее части) создавать хромосому потомка. При его реализации случайным образом 
+            //определяется одна или несколько точек разреза (инверсии), внутри которых элементы инвертируются.
+            _populationAfterKrossingover = new List<List<int>>();
+            _tochkiRazriva = new List<List<int>>();
+            var rnd = new Random();
+            for (var i = 0; i < PERSON_COUNT; i++)
+            {
+                var tochkiRazrivaSub = new List<int>();
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT - 1));
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT - 1));
+                tochkiRazrivaSub.Sort();
+                _tochkiRazriva.Add(tochkiRazrivaSub);
+                var newGen = new List<int>();
+
+                for (var j = 0; j < GEN_COUNT; j++)
+                {
+                    if (j < tochkiRazrivaSub[0] || j > tochkiRazrivaSub[1])
+                    {
+                        newGen.Add(_population[i][j]);
+                    }
+                    else
+                    {
+                        newGen.Add(_population[i][tochkiRazrivaSub[1] - j + tochkiRazrivaSub[0]]);
+                    }
+                }
+                _populationAfterKrossingover.Add(newGen);
             }
         }
 
@@ -292,28 +461,7 @@ namespace GenAlgConsoleApplication
             }
         }
 
-        private static void PopulationsShowAfterKrossingoverOdnotochechniy(string str)
-        {
-            //показываю для каждой пары популяций до и после значения и точку разрыва
-            Console.WriteLine(str);
-            for (int i = 0; i < PERSON_COUNT; i += 2)
-            {
-                Console.Write("ДО: \r\n" + i + ": ");
-                PopulationShow(_population[i]);
-                Console.WriteLine();
-                Console.Write(i + 1 + ": ");
-                PopulationShow(_population[i + 1]);
-                Console.WriteLine();
-                Console.Write("ПОСЛЕ: точка разрыва=" + _tochkiRazriva[i / 2][0] + "\r\n" + i + ": ");
-                PopulationShow(_populationAfterKrossingover[i]);
-                Console.WriteLine();
-                Console.Write(i + 1 + ": ");
-                PopulationShow(_populationAfterKrossingover[i + 1]);
-                Console.WriteLine("\r\n______________________________");
-            }
-        }
-
-        private static void PopulationsShowAfterKrossingoverDvuhtochechniy(string str)
+        private static void PopulationsShowAfterAndBeforeKrossingover(string str, int razrivCount)
         {
             //показываю для каждой пары популяций до и после значения и точки разрыва
             Console.WriteLine(str);
@@ -325,8 +473,16 @@ namespace GenAlgConsoleApplication
                 Console.Write(i + 1 + ": ");
                 PopulationShow(_population[i + 1]);
                 Console.WriteLine();
-                Console.Write("ПОСЛЕ: точки разрыва=" + _tochkiRazriva[i/2][0] + " " + _tochkiRazriva[i/2][1] + "\r\n" + i +
-                              ": ");
+                Console.Write("ПОСЛЕ: ");
+                if(razrivCount>0)
+                {
+                    Console.Write("точки разрыва=");
+                    for (int x = 0; x < razrivCount; x++)
+                    {
+                        Console.Write(" " + _tochkiRazriva[i / 2][x]);
+                    }
+                }
+                Console.Write("\r\n" + i + ": ");
                 PopulationShow(_populationAfterKrossingover[i]);
                 Console.WriteLine();
                 Console.Write(i + 1 + ": ");
@@ -335,24 +491,27 @@ namespace GenAlgConsoleApplication
             }
         }
 
-        private static void PopulationsShowAfterKrossingoverTrehtochechniy(string str)
+        private static void PopulationsShowAfterAndBeforeMutation(string str, int mutationCount)
         {
             //показываю для каждой пары популяций до и после значения и точки разрыва
             Console.WriteLine(str);
-            for (int i = 0; i < PERSON_COUNT; i += 2)
+            for (int i = 0; i < PERSON_COUNT; i ++)
             {
                 Console.Write("ДО: \r\n" + i + ": ");
                 PopulationShow(_population[i]);
                 Console.WriteLine();
-                Console.Write(i + 1 + ": ");
-                PopulationShow(_population[i+1]);
-                Console.WriteLine();
-                Console.Write("ПОСЛЕ: точки разрыва=" + _tochkiRazriva[i / 2][0] + " " + _tochkiRazriva[i / 2][1] + " " + _tochkiRazriva[i / 2][2] + "\r\n" + i +
-                              ": ");
+                Console.Write("ПОСЛЕ: ");
+                if (mutationCount > 0)
+                {
+                    Console.Write("точки мутации=");
+                    for (int x = 0; x < mutationCount; x++)
+                    {
+                        Console.Write(" " + _tochkiRazriva[i][x]);
+                    }
+                }
+                Console.Write("\r\n" + i + ": ");
                 PopulationShow(_populationAfterKrossingover[i]);
                 Console.WriteLine();
-                Console.Write(i + 1 + ": ");
-                PopulationShow(_populationAfterKrossingover[i+1]);
                 Console.WriteLine("\r\n______________________________");
             }
         }
