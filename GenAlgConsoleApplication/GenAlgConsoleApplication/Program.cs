@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace GenAlgConsoleApplication
@@ -7,9 +8,9 @@ namespace GenAlgConsoleApplication
     {
         private const int PERSON_COUNT = 2;
         private const int GEN_COUNT = 8;
-        private static int[,] _population;
-        private static int[,] _populationAfterKrossingover;
-        private static int[,] _tochkiRazriva;
+        private static List<List<int>> _population;
+        private static List<List<int>> _populationAfterKrossingover;
+        private static List<List<int>> _tochkiRazriva;
         //•	Одноточечного оператора +
         //•	Двухточечного +
         //•	Трёхточечного +
@@ -41,30 +42,24 @@ namespace GenAlgConsoleApplication
         private static void GenerateDrobovikPopulation()
         {
             //берём случайные от всего решения и каждому гену присваивем случайное число
-            _population = new int[PERSON_COUNT, GEN_COUNT];
+            _population = new List<List<int>>();
             var rnd = new Random();
             for (int i = 0; i < PERSON_COUNT; i++)
             {
+                var gen = new List<int>();
                 for (int j = 0; j < GEN_COUNT; j++)
                 {
-                    var isExists = true; //генерирую только уникальные значения
-                    while (isExists)
+                    while (true)
                     {
-                        isExists = false;
                         var currentValue = rnd.Next(1, 9);
-                        for (int k = 0; k < j; k++)
+                        if (!gen.Exists(g => g == currentValue))
                         {
-                            if (_population[i, k] == currentValue)
-                            {
-                                isExists = true;
-                            }
-                        }
-                        if (!isExists)
-                        {
-                            _population[i, j] = currentValue;
+                            gen.Add(currentValue);
+                            break;
                         }
                     }
                 }
+                _population.Add(gen);
             }
         }
 
@@ -73,62 +68,66 @@ namespace GenAlgConsoleApplication
             //Перед началом работы одноточечного оператора кроссинговера определяется так называемая точка ОК, 
             //или разрезающая точка ОК, которая обычно определяется случайно.
             //Эта точка определяет место в двух хромосомах, где они должны быть «разрезаны».
-            _populationAfterKrossingover = new int[PERSON_COUNT, GEN_COUNT];
-            _tochkiRazriva = new int[PERSON_COUNT/2,1];
+
+            _populationAfterKrossingover = new List<List<int>>();
+            _tochkiRazriva = new List<List<int>>();
             var rnd = new Random();
-            for (int i = 0; i < PERSON_COUNT; i += 2)
+            for (var i = 0; i < PERSON_COUNT; i += 2)
             {
-                var tochkaRazriva = rnd.Next(0, GEN_COUNT + 1);
-                _tochkiRazriva[i/2,0] = tochkaRazriva;
-                for (int j = 0; j < GEN_COUNT; j++)
+                var tochkiRazrivaSub = new List<int>();
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT + 1));
+                _tochkiRazriva.Add(tochkiRazrivaSub);
+                var newGen = new List<int>();
+                var newGen2 = new List<int>();
+                for (var j = 0; j < GEN_COUNT; j++)
                 {
-                    if (j >= tochkaRazriva)
+                    if (j >= tochkiRazrivaSub[0])
                     {
-                        _populationAfterKrossingover[i + 1, j] = _population[i, j];
-                        _populationAfterKrossingover[i, j] = _population[i + 1, j];
+                        newGen.Add(_population[i + 1][j]);
+                        newGen2.Add(_population[i][j]);
                     }
                     else
                     {
-                        _populationAfterKrossingover[i, j] = _population[i, j];
-                        _populationAfterKrossingover[i + 1, j] = _population[i + 1, j];
+                        newGen.Add(_population[i][j]);
+                        newGen2.Add(_population[i + 1][j]);
                     }
                 }
+                _populationAfterKrossingover.Add(newGen);
+                _populationAfterKrossingover.Add(newGen2);
             }
-            Console.WriteLine();
         }
 
         private static void KrossingoverDvuhtochechniy()
         {
             //В каждой хромосоме определяются две точки ОК,
             //и хромосомы обмениваются участками, расположенными между двумя точками ОК. 
-            _populationAfterKrossingover = new int[PERSON_COUNT, GEN_COUNT];
-            _tochkiRazriva = new int[PERSON_COUNT/2, 2];
+            _populationAfterKrossingover = new List<List<int>>();
+            _tochkiRazriva = new List<List<int>>();
             var rnd = new Random();
             for (int i = 0; i < PERSON_COUNT; i += 2)
             {
-                var tochkaRazriva1 = rnd.Next(0, GEN_COUNT + 1);
-                var tochkaRazriva2 = rnd.Next(0, GEN_COUNT + 1);
-                if (tochkaRazriva1 > tochkaRazriva2)
-                {
-                    var stakan = tochkaRazriva2;
-                    tochkaRazriva2 = tochkaRazriva1;
-                    tochkaRazriva1 = stakan;
-                }
-                _tochkiRazriva[i/2, 0] = tochkaRazriva1;
-                _tochkiRazriva[i/2, 1] = tochkaRazriva2;
+                var tochkiRazrivaSub = new List<int>();
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT + 1));
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT + 1));
+                tochkiRazrivaSub.Sort();
+                _tochkiRazriva.Add(tochkiRazrivaSub);
 
+                var newGen = new List<int>();
+                var newGen2 = new List<int>();
                 for (int j = 0; j < GEN_COUNT; j++)
                 {
-                    if (j >= tochkaRazriva1 && j < tochkaRazriva2)
+                    if (j >= tochkiRazrivaSub[0] && j < tochkiRazrivaSub[1])
                     {
-                        _populationAfterKrossingover[i + 1, j] = _population[i, j];
-                        _populationAfterKrossingover[i, j] = _population[i + 1, j];
+                        newGen.Add(_population[i + 1][j]);
+                        newGen2.Add(_population[i][j]);
                     }
                     else
                     {
-                        _populationAfterKrossingover[i, j] = _population[i, j];
-                        _populationAfterKrossingover[i + 1, j] = _population[i + 1, j];
+                        newGen.Add(_population[i][j]);
+                        newGen2.Add(_population[i+1][j]);
                     }
+                    _populationAfterKrossingover.Add(newGen);
+                    _populationAfterKrossingover.Add(newGen2);
                 }
             }
             Console.WriteLine();
@@ -138,47 +137,36 @@ namespace GenAlgConsoleApplication
         {
             //В каждой хромосоме определяются две точки ОК,
             //и хромосомы обмениваются участками, расположенными между двумя точками ОК. 
-            _populationAfterKrossingover = new int[PERSON_COUNT, GEN_COUNT];
-            _tochkiRazriva = new int[PERSON_COUNT, 3];
+            _populationAfterKrossingover = new List<List<int>>();
+            _tochkiRazriva = new List<List<int>>();
             var rnd = new Random();
             for (int i = 0; i < PERSON_COUNT; i += 2)
             {
-                _tochkiRazriva[i/2, 0] = rnd.Next(0, GEN_COUNT + 1);
-                _tochkiRazriva[i/2, 1] = rnd.Next(0, GEN_COUNT + 1);
-                _tochkiRazriva[i/2, 2] = rnd.Next(0, GEN_COUNT + 1);
-                _tochkiRazriva = SortArray(_tochkiRazriva, i/2);
+                var tochkiRazrivaSub = new List<int>();
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT + 1));
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT + 1));
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT + 1));
+                tochkiRazrivaSub.Sort();
+                _tochkiRazriva.Add(tochkiRazrivaSub);
+                var newGen = new List<int>();
+                var newGen2 = new List<int>();
                 for (int j = 0; j < GEN_COUNT; j++)
                 {
-                    if ((j >= _tochkiRazriva[i/2, 0] && j < _tochkiRazriva[i/2, 1]) || j >= _tochkiRazriva[i/2, 2])
+                    if ((j >= tochkiRazrivaSub[0] && j < tochkiRazrivaSub[1]) || j >= tochkiRazrivaSub[2])
                     {
-                        _populationAfterKrossingover[i + 1, j] = _population[i, j];
-                        _populationAfterKrossingover[i, j] = _population[i + 1, j];
+                        newGen.Add(_population[i + 1][j]);
+                        newGen2.Add(_population[i][j]);
                     }
                     else
                     {
-                        _populationAfterKrossingover[i, j] = _population[i, j];
-                        _populationAfterKrossingover[i + 1, j] = _population[i + 1, j];
+                        newGen.Add(_population[i][j]);
+                        newGen2.Add(_population[i + 1][j]);
                     }
                 }
+                _populationAfterKrossingover.Add(newGen);
+                _populationAfterKrossingover.Add(newGen2);
             }
             Console.WriteLine();
-        }
-
-        private static int[,] SortArray(int[,] array, int i)
-        {
-            for (int x = 0; x < 2; x++)
-            {
-                for (int y = 0; y < 2 - x; y++)
-                {
-                    if (array[i, y] > array[i, y + 1])
-                    {
-                        var stakan = _tochkiRazriva[i, y];
-                        array[i, y] = array[i, y + 1];
-                        array[i, y + 1] = stakan;
-                    }
-                }
-            } // сортирую точки разрыва пузырьком 
-            return array;
         }
 
         private static void KrossingoverUporyadochenniyOdnotochechniy()
@@ -188,56 +176,45 @@ namespace GenAlgConsoleApplication
             //исключая элементы, уже попавшие в Р'1. 
             //Получение Р'2 может выполняться различными способами. Наиболее распространенный метод копирования левого сегмента из Р2, 
             //а далее анализ Р1 методом, указанным выше. Тогда имеем P'2 : (G A B E | C D F H).
-            _populationAfterKrossingover = new int[PERSON_COUNT, GEN_COUNT];
-            _tochkiRazriva = new int[PERSON_COUNT/2, 1];
+            _populationAfterKrossingover = new List<List<int>>();
+            _tochkiRazriva = new List<List<int>>();
             var rnd = new Random();
             for (int i = 0; i < PERSON_COUNT; i += 2)
             {
-                var tochkaRazriva = rnd.Next(0, GEN_COUNT + 1);
-                _tochkiRazriva[i/2, 0] = tochkaRazriva;
+                var tochkiRazrivaSub = new List<int>();
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT + 1));
+                _tochkiRazriva.Add(tochkiRazrivaSub);
+                var newGen = new List<int>();
+                var newGen2 = new List<int>();
                 for (int j = 0; j < GEN_COUNT; j++)
                 {
-                    if (j >= tochkaRazriva)
+                    if (j >= tochkiRazrivaSub[0])
                     {
                         for (int x = 0; x < GEN_COUNT; x++) //поиск элемента из (популяции 2) которого ещё нету в популяции один, для добавления в (новую популяцию 1)
                         {
-                            var isExists = false;
-                            for (int y = 0; y < GEN_COUNT; y++)
+                            if (!newGen.Exists(g=>g == _population[i+1][x]))
                             {
-                                if (_populationAfterKrossingover[i, y] == _population[i + 1, x])
-                                {
-                                    isExists = true;
-                                }
-                            }
-                            if (isExists == false)
-                            {
-                                _populationAfterKrossingover[i, j] = _population[i + 1, x];
+                                newGen.Add(_population[i + 1][x]);
                                 break;
                             }
                         }
                         for (int x = 0; x < GEN_COUNT; x++) //поиск элемента из (популяции 1) которого ещё нету в популяции один, для добавления в (новую популяцию 2)
                         {
-                            var isExists = false;
-                            for (int y = 0; y < GEN_COUNT; y++)
+                            if (!newGen2.Exists(g => g == _population[i][x]))
                             {
-                                if (_populationAfterKrossingover[i + 1, y] == _population[i, x])
-                                {
-                                    isExists = true;
-                                }
-                            }
-                            if (isExists == false)
-                            {
-                                _populationAfterKrossingover[i + 1, j] = _population[i, x];
+                                newGen2.Add(_population[i][x]);
                                 break;
                             }
                         }
                     }
                     else
                     {
-                        _populationAfterKrossingover[i, j] = _population[i, j];
-                        _populationAfterKrossingover[i + 1, j] = _population[i + 1, j];
+                        newGen.Add(_population[i][j]);
+                        newGen2.Add(_population[i + 1][j]);
                     }
                 }
+                _populationAfterKrossingover.Add(newGen);
+                _populationAfterKrossingover.Add(newGen2);
             }
             Console.WriteLine();
         }
@@ -249,67 +226,58 @@ namespace GenAlgConsoleApplication
             //частичное соответствие между элементами первого и второго родителей с формированием потомков. 
             //При этом правый сегмент P2 переносится в P'1, левый сегмент Р1 переносится в P'1 
             //с заменой повторяющихся генов на отсутствующие гены, находящиеся в частичном соответствии. 
-            _populationAfterKrossingover = new int[PERSON_COUNT, GEN_COUNT];
-            _tochkiRazriva = new int[PERSON_COUNT/2, 1];
+
+            _populationAfterKrossingover = new List<List<int>>();
+            _tochkiRazriva = new List<List<int>>();
             var rnd = new Random();
             for (int i = 0; i < PERSON_COUNT; i += 2)
             {
-                var tochkaRazriva = rnd.Next(0, GEN_COUNT + 1);
-                _tochkiRazriva[i/2, 0] = tochkaRazriva;
-                for (int j = tochkaRazriva; j < GEN_COUNT; j++)
+                var tochkiRazrivaSub = new List<int>();
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT + 1));
+                _tochkiRazriva.Add(tochkiRazrivaSub);
+                var newGen = new List<int>();
+                var newGen2 = new List<int>();
+                for (int j = 0; j < GEN_COUNT; j++)
                 {
-                    _populationAfterKrossingover[i, j] = _population[i + 1, j];
-                    _populationAfterKrossingover[i + 1, j] = _population[i, j];
+                    if (j < tochkiRazrivaSub[0])
+                    {
+                        newGen.Add(-1);
+                        newGen2.Add(-1);
+                    }
+                    else
+                    {
+                        newGen.Add(_population[i + 1][j]);
+                        newGen2.Add(_population[i][j]);
+                    }
                 }
-                for (int j = 0; j < tochkaRazriva; j++)
+                for (int j = 0; j < tochkiRazrivaSub[0]; j++) //тут вобщем, надо языком лучше объяснить
                 {
-                    //for (int x = 0; x < j; x++) //поиск элемента из (популяции 2) которого ещё нету в популяции один, для добавления в (новую популяцию 1)
+                    var index = j;
+                    while (true)
                     {
-                        var isExists = false;
-                        for (int y = tochkaRazriva; y < GEN_COUNT; y++)
+                        if (!newGen.Exists(g => g == _population[i][index]))
                         {
-                            if (_populationAfterKrossingover[i, y] == _population[i, j])
-                            {
-                                isExists = true;
-                            }
+                            newGen[j] = _population[i][index];
+                            break;
                         }
-                        if (isExists == false)
-                        {
-                            _populationAfterKrossingover[i, j] = _population[i, j];
-                        }
+                        index = newGen.IndexOf(_population[i][index]);
                     }
-                    {
-                        var isExists = false;
-                        for (int y = tochkaRazriva; y < GEN_COUNT; y++)
-                        {
-                            if (_populationAfterKrossingover[i+1, y] == _population[i+1, j])
-                            {
-                                isExists = true;
-                            }
-                        }
-                        if (isExists == false)
-                        {
-                            _populationAfterKrossingover[i+1, j] = _population[i+1, j];
-                        }
-                    }
-                    //for (int x = 0; x < j; x++)
-                    //    //поиск элемента из (популяции 1) которого ещё нету в популяции один, для добавления в (новую популяцию 2)
-                    //{
-                    //    var isExists = false;
-                    //    for (int y = 0; y < j; y++)
-                    //    {
-                    //        if (_populationAfterKrossingover[i + 1, y] == _population[i, x])
-                    //        {
-                    //            isExists = true;
-                    //        }
-                    //    }
-                    //    if (isExists == false)
-                    //    {
-                    //        _populationAfterKrossingover[i + 1, j] = _population[i, x];
-                    //        break;
-                    //    }
-                    //}
                 }
+                for (int j = 0; j < tochkiRazrivaSub[0]; j++)
+                {
+                    var index = j;
+                    while (true)
+                    {
+                        if (!newGen2.Exists(g => g == _population[i+1][index]))
+                        {
+                            newGen2[j] = _population[i+1][index];
+                            break;
+                        }
+                        index = newGen2.IndexOf(_population[i+1][index]);
+                    }
+                }
+                _populationAfterKrossingover.Add(newGen);
+                _populationAfterKrossingover.Add(newGen2);
             }
         }
 
@@ -319,10 +287,7 @@ namespace GenAlgConsoleApplication
             for (int i = 0; i < PERSON_COUNT; i++)
             {
                 Console.Write(i + ": ");
-                for (int j = 0; j < GEN_COUNT; j++)
-                {
-                    Console.Write("{0,4} ", _population[i, j]); // {0,4} - это для отступов, чтобы красиво отображалось
-                }
+                PopulationShow(_population[i]);
                 Console.WriteLine();
             }
         }
@@ -334,16 +299,16 @@ namespace GenAlgConsoleApplication
             for (int i = 0; i < PERSON_COUNT; i += 2)
             {
                 Console.Write("ДО: \r\n" + i + ": ");
-                PopulationShow(i, _population);
+                PopulationShow(_population[i]);
                 Console.WriteLine();
                 Console.Write(i + 1 + ": ");
-                PopulationShow(i + 1, _population);
+                PopulationShow(_population[i + 1]);
                 Console.WriteLine();
-                Console.Write("ПОСЛЕ: точка разрыва=" + _tochkiRazriva[i/2,0] + "\r\n" + i + ": ");
-                PopulationShow(i, _populationAfterKrossingover);
+                Console.Write("ПОСЛЕ: точка разрыва=" + _tochkiRazriva[i / 2][0] + "\r\n" + i + ": ");
+                PopulationShow(_populationAfterKrossingover[i]);
                 Console.WriteLine();
                 Console.Write(i + 1 + ": ");
-                PopulationShow(i + 1, _populationAfterKrossingover);
+                PopulationShow(_populationAfterKrossingover[i + 1]);
                 Console.WriteLine("\r\n______________________________");
             }
         }
@@ -355,17 +320,17 @@ namespace GenAlgConsoleApplication
             for (int i = 0; i < PERSON_COUNT; i += 2)
             {
                 Console.Write("ДО: \r\n" + i + ": ");
-                PopulationShow(i, _population);
+                PopulationShow(_population[i]);
                 Console.WriteLine();
                 Console.Write(i + 1 + ": ");
-                PopulationShow(i + 1, _population);
+                PopulationShow(_population[i + 1]);
                 Console.WriteLine();
-                Console.Write("ПОСЛЕ: точки разрыва=" + _tochkiRazriva[i/2,0] + " " + _tochkiRazriva[i/2,1] + "\r\n" + i +
+                Console.Write("ПОСЛЕ: точки разрыва=" + _tochkiRazriva[i/2][0] + " " + _tochkiRazriva[i/2][1] + "\r\n" + i +
                               ": ");
-                PopulationShow(i, _populationAfterKrossingover);
+                PopulationShow(_populationAfterKrossingover[i]);
                 Console.WriteLine();
                 Console.Write(i + 1 + ": ");
-                PopulationShow(i + 1, _populationAfterKrossingover);
+                PopulationShow(_populationAfterKrossingover[i + 1]);
                 Console.WriteLine("\r\n______________________________");
             }
         }
@@ -377,26 +342,26 @@ namespace GenAlgConsoleApplication
             for (int i = 0; i < PERSON_COUNT; i += 2)
             {
                 Console.Write("ДО: \r\n" + i + ": ");
-                PopulationShow(i, _population);
+                PopulationShow(_population[i]);
                 Console.WriteLine();
                 Console.Write(i + 1 + ": ");
-                PopulationShow(i + 1, _population);
+                PopulationShow(_population[i+1]);
                 Console.WriteLine();
-                Console.Write("ПОСЛЕ: точки разрыва=" + _tochkiRazriva[i / 2, 0] + " " + _tochkiRazriva[i / 2, 1] + " " + _tochkiRazriva[i / 2, 2] + "\r\n" + i +
+                Console.Write("ПОСЛЕ: точки разрыва=" + _tochkiRazriva[i / 2][0] + " " + _tochkiRazriva[i / 2][1] + " " + _tochkiRazriva[i / 2][2] + "\r\n" + i +
                               ": ");
-                PopulationShow(i, _populationAfterKrossingover);
+                PopulationShow(_populationAfterKrossingover[i]);
                 Console.WriteLine();
                 Console.Write(i + 1 + ": ");
-                PopulationShow(i + 1, _populationAfterKrossingover);
+                PopulationShow(_populationAfterKrossingover[i+1]);
                 Console.WriteLine("\r\n______________________________");
             }
         }
 
-        private static void PopulationShow(int i, int[,] population)
+        private static void PopulationShow(List<int> population)
         {
             for (int j = 0; j < GEN_COUNT; j++)
             {
-                Console.Write("{0,4} ", population[i, j]);
+                Console.Write("{0,4} ", population[j]);
             }
         }
     }
