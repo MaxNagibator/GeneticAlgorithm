@@ -5,7 +5,7 @@ namespace GenAlgConsoleApplication
 {
     internal class Program
     {
-        private const int PERSON_COUNT = 10;
+        private const int PERSON_COUNT = 2;
         private const int GEN_COUNT = 8;
         private static int[,] _population;
         private static int[,] _populationAfterKrossingover;
@@ -14,7 +14,7 @@ namespace GenAlgConsoleApplication
         //•	Двухточечного +
         //•	Трёхточечного +
         //•	Универсального
-        //•	Упорядочивающего одно- и двухточечный операторы кроссинговера
+        //•	Упорядочивающего одно- и двухточечный операторы кроссинговера  +/-
         //•	Частично-соответствующего одно- и двухточечному операторам кроссинговера
         //•	Циклического оператора
         //•	«Жадного» оператора
@@ -22,7 +22,7 @@ namespace GenAlgConsoleApplication
 
         private static void Main(string[] args)
         {
-            //пусть вся область всех генов у нас будет числа от 0 до 255
+            //пусть вся область всех генов у нас будет числа от 1 до 9
             //ВИД ГЕНА: числовой!
             GenerateDrobovikPopulation();
             PopulationsShow("Начальная популяция");
@@ -34,6 +34,8 @@ namespace GenAlgConsoleApplication
             PopulationsShowAfterKrossingoverTrehtochechniy("После кроссинговера Трехточечного");
             KrossingoverUporyadochenniyOdnotochechniy();
             PopulationsShowAfterKrossingoverOdnotochechniy("После кроссинговера упорядоченного Одноточечного");
+            KrossingoverChastichSootvetOdnotochechniy();
+            PopulationsShowAfterKrossingoverOdnotochechniy("После кроссинговера частично-соответствующего Одноточечного");
         }
 
         private static void GenerateDrobovikPopulation()
@@ -45,8 +47,23 @@ namespace GenAlgConsoleApplication
             {
                 for (int j = 0; j < GEN_COUNT; j++)
                 {
-                    var currentValue = rnd.Next(0, 255);
-                    _population[i, j] = currentValue;
+                    var isExists = true; //генерирую только уникальные значения
+                    while (isExists)
+                    {
+                        isExists = false;
+                        var currentValue = rnd.Next(1, 9);
+                        for (int k = 0; k < j; k++)
+                        {
+                            if (_population[i, k] == currentValue)
+                            {
+                                isExists = true;
+                            }
+                        }
+                        if (!isExists)
+                        {
+                            _population[i, j] = currentValue;
+                        }
+                    }
                 }
             }
         }
@@ -182,10 +199,10 @@ namespace GenAlgConsoleApplication
                 {
                     if (j >= tochkaRazriva)
                     {
-                        for (int x = 0; x < j; x++) //поиск элемента из (популяции 2) которого ещё нету в популяции один, для добавления в (новую популяцию 1)
+                        for (int x = 0; x < GEN_COUNT; x++) //поиск элемента из (популяции 2) которого ещё нету в популяции один, для добавления в (новую популяцию 1)
                         {
                             var isExists = false;
-                            for (int y = 0; y < j; y++)
+                            for (int y = 0; y < GEN_COUNT; y++)
                             {
                                 if (_populationAfterKrossingover[i, y] == _population[i + 1, x])
                                 {
@@ -198,10 +215,10 @@ namespace GenAlgConsoleApplication
                                 break;
                             }
                         }
-                        for (int x = 0; x < j; x++) //поиск элемента из (популяции 1) которого ещё нету в популяции один, для добавления в (новую популяцию 2)
+                        for (int x = 0; x < GEN_COUNT; x++) //поиск элемента из (популяции 1) которого ещё нету в популяции один, для добавления в (новую популяцию 2)
                         {
                             var isExists = false;
-                            for (int y = 0; y < j; y++)
+                            for (int y = 0; y < GEN_COUNT; y++)
                             {
                                 if (_populationAfterKrossingover[i + 1, y] == _population[i, x])
                                 {
@@ -223,6 +240,77 @@ namespace GenAlgConsoleApplication
                 }
             }
             Console.WriteLine();
+        }
+
+        private static void KrossingoverChastichSootvetOdnotochechniy()
+        {
+            //Здесь также случайно выбирается «разрезающая» точка или точка ОК. 
+            //Дальше анализируются сегменты (части) в обеих хромосомах и устанавливается 
+            //частичное соответствие между элементами первого и второго родителей с формированием потомков. 
+            //При этом правый сегмент P2 переносится в P'1, левый сегмент Р1 переносится в P'1 
+            //с заменой повторяющихся генов на отсутствующие гены, находящиеся в частичном соответствии. 
+            _populationAfterKrossingover = new int[PERSON_COUNT, GEN_COUNT];
+            _tochkiRazriva = new int[PERSON_COUNT/2, 1];
+            var rnd = new Random();
+            for (int i = 0; i < PERSON_COUNT; i += 2)
+            {
+                var tochkaRazriva = rnd.Next(0, GEN_COUNT + 1);
+                _tochkiRazriva[i/2, 0] = tochkaRazriva;
+                for (int j = tochkaRazriva; j < GEN_COUNT; j++)
+                {
+                    _populationAfterKrossingover[i, j] = _population[i + 1, j];
+                    _populationAfterKrossingover[i + 1, j] = _population[i, j];
+                }
+                for (int j = 0; j < tochkaRazriva; j++)
+                {
+                    //for (int x = 0; x < j; x++) //поиск элемента из (популяции 2) которого ещё нету в популяции один, для добавления в (новую популяцию 1)
+                    {
+                        var isExists = false;
+                        for (int y = tochkaRazriva; y < GEN_COUNT; y++)
+                        {
+                            if (_populationAfterKrossingover[i, y] == _population[i, j])
+                            {
+                                isExists = true;
+                            }
+                        }
+                        if (isExists == false)
+                        {
+                            _populationAfterKrossingover[i, j] = _population[i, j];
+                        }
+                    }
+                    {
+                        var isExists = false;
+                        for (int y = tochkaRazriva; y < GEN_COUNT; y++)
+                        {
+                            if (_populationAfterKrossingover[i+1, y] == _population[i+1, j])
+                            {
+                                isExists = true;
+                            }
+                        }
+                        if (isExists == false)
+                        {
+                            _populationAfterKrossingover[i+1, j] = _population[i+1, j];
+                        }
+                    }
+                    //for (int x = 0; x < j; x++)
+                    //    //поиск элемента из (популяции 1) которого ещё нету в популяции один, для добавления в (новую популяцию 2)
+                    //{
+                    //    var isExists = false;
+                    //    for (int y = 0; y < j; y++)
+                    //    {
+                    //        if (_populationAfterKrossingover[i + 1, y] == _population[i, x])
+                    //        {
+                    //            isExists = true;
+                    //        }
+                    //    }
+                    //    if (isExists == false)
+                    //    {
+                    //        _populationAfterKrossingover[i + 1, j] = _population[i, x];
+                    //        break;
+                    //    }
+                    //}
+                }
+            }
         }
 
         private static void PopulationsShow(string str)
