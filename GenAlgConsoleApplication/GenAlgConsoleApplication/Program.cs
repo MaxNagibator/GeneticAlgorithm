@@ -35,61 +35,25 @@ namespace GenAlgConsoleApplication
         {
             //пусть вся область всех генов у нас будет числа от 0 до 7
             //ВИД ГЕНА: числовой!
-            GenerateUniquePopulation(0, 7);
-            PopulationsShow("Начальные популяции");
+            _population = Worker.GenerateUniquePopulation(PERSON_COUNT, GEN_COUNT, 0, 7);
+            Worker.PopulationsShow("Начальные популяции", _population);
             KrossingoverOdnotochechniy();
-            PopulationsShowAfterAndBeforeKrossingover("После кроссинговера Одноточечного");
             KrossingoverDvuhtochechniy();
-            PopulationsShowAfterAndBeforeKrossingover("После кроссинговера Двухточечного");
             KrossingoverTrehtochechniy();
-            PopulationsShowAfterAndBeforeKrossingover("После кроссинговера Трехточечного");
             KrossingoverUporyadochenniyOdnotochechniy();
-            PopulationsShowAfterAndBeforeKrossingover("После кроссинговера упорядоченного Одноточечного");
             KrossingoverChastichSootvetOdnotochechniy();
-            PopulationsShowAfterAndBeforeKrossingover("После кроссинговера частично-соответствующего Одноточечного");
             KrossingoverCiklicheskiy();
-            PopulationsShowAfterAndBeforeKrossingover("После кроссинговера Циклического");
             MutationOdnotochechniy();
-            PopulationsShowAfterAndBeforeMutation("После мутации одноточечной");
             MutationDvuhtochechniy();
-            PopulationsShowAfterAndBeforeMutation("После мутации двухточечной");
             MutationInversiyaOdnoTochechnaya();
-            PopulationsShowAfterAndBeforeMutation("После мутации инверсии одноточечной");
             MutationInversiyaDvuhTochechnaya();
-            PopulationsShowAfterAndBeforeMutation("После мутации инверсии двухточечной");
             KrossingoverMutationTranslakation();
-            PopulationsShowAfterAndBeforeKrossingover("После мутации/кроссинговера транслакация");
             MutationDeleciyaDvuhTochechnaya();
-            PopulationsShowAfterAndBeforeMutation("После мутации делеции двухточечной");
 
             GenerateNotUniquePopulation(0, 1);
-            PopulationsShow("Начальные популяции");
+            Worker.PopulationsShow("Начальные популяции", _population);
             KrossingoverUniversal();
-            PopulationsShowAfterAndBeforeKrossingover("После кроссинговера унивесального","маска=");
-        }
-
-        private static void GenerateUniquePopulation(int minValue, int maxValue)
-        {
-            //берём случайные от всего решения и каждому гену присваивем случайное число
-            _population = new List<List<int>>();
-            var rnd = new Random();
-            for (int i = 0; i < PERSON_COUNT; i++)
-            {
-                var gen = new List<int>();
-                for (int j = 0; j < GEN_COUNT; j++)
-                {
-                    while (true)
-                    {
-                        var currentValue = rnd.Next(minValue, maxValue+1);
-                        if (!gen.Exists(g => g == currentValue))
-                        {
-                            gen.Add(currentValue);
-                            break;
-                        }
-                    }
-                }
-                _population.Add(gen);
-            }
+            KrossingoverZhadniy.Execute(2, 8);
         }
 
         private static void GenerateNotUniquePopulation(int minValue, int maxValue)
@@ -141,6 +105,9 @@ namespace GenAlgConsoleApplication
                 _populationAfterKrossingover.Add(newGen);
                 _populationAfterKrossingover.Add(newGen2);
             }
+
+            Worker.PopulationsShowAfterAndBeforeKrossingover("После кроссинговера Одноточечного",
+                                                             _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
         private static void KrossingoverDvuhtochechniy()
@@ -176,7 +143,8 @@ namespace GenAlgConsoleApplication
                     _populationAfterKrossingover.Add(newGen2);
                 }
             }
-            Console.WriteLine();
+            Worker.PopulationsShowAfterAndBeforeKrossingover("После кроссинговера Двухточечного",
+                                                             _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
         private static void KrossingoverTrehtochechniy()
@@ -212,7 +180,8 @@ namespace GenAlgConsoleApplication
                 _populationAfterKrossingover.Add(newGen);
                 _populationAfterKrossingover.Add(newGen2);
             }
-            Console.WriteLine();
+            Worker.PopulationsShowAfterAndBeforeKrossingover("После кроссинговера Трехточечного",
+                                                             _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
         private static void KrossingoverUporyadochenniyOdnotochechniy()
@@ -264,7 +233,8 @@ namespace GenAlgConsoleApplication
                 _populationAfterKrossingover.Add(newGen);
                 _populationAfterKrossingover.Add(newGen2);
             }
-            Console.WriteLine();
+            Worker.PopulationsShowAfterAndBeforeKrossingover("После кроссинговера упорядоченного Одноточечного",
+                                                             _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
         private static void KrossingoverChastichSootvetOdnotochechniy()
@@ -327,6 +297,9 @@ namespace GenAlgConsoleApplication
                 _populationAfterKrossingover.Add(newGen);
                 _populationAfterKrossingover.Add(newGen2);
             }
+            Worker.PopulationsShowAfterAndBeforeKrossingover(
+                "После кроссинговера частично-соответствующего Одноточечного",
+                _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
         private static void KrossingoverCiklicheskiy()
@@ -358,6 +331,8 @@ namespace GenAlgConsoleApplication
                 _populationAfterKrossingover.Add(newGen);
                 _populationAfterKrossingover.Add(newGen2);
             }
+            Worker.PopulationsShowAfterAndBeforeKrossingover("После кроссинговера Циклического",
+                                                             _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
         private static void MutationOdnotochechniy()
@@ -384,6 +359,8 @@ namespace GenAlgConsoleApplication
 
                 _populationAfterKrossingover.Add(newGen);
             }
+            Worker.PopulationsShowAfterAndBeforeMutation("После мутации одноточечной",
+                                                         _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
         private static void MutationDvuhtochechniy()
@@ -411,6 +388,8 @@ namespace GenAlgConsoleApplication
 
                 _populationAfterKrossingover.Add(newGen);
             }
+            Worker.PopulationsShowAfterAndBeforeMutation("После мутации двухточечной",
+                                                         _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
         private static void MutationInversiyaOdnoTochechnaya()
@@ -441,6 +420,8 @@ namespace GenAlgConsoleApplication
                 }
                 _populationAfterKrossingover.Add(newGen);
             }
+            Worker.PopulationsShowAfterAndBeforeMutation("После мутации инверсии одноточечной",
+                                                         _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
         private static void MutationInversiyaDvuhTochechnaya()
@@ -473,6 +454,8 @@ namespace GenAlgConsoleApplication
                 }
                 _populationAfterKrossingover.Add(newGen);
             }
+            Worker.PopulationsShowAfterAndBeforeMutation("После мутации инверсии двухточечной",
+                                                         _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
         private static void KrossingoverMutationTranslakation()
@@ -512,6 +495,8 @@ namespace GenAlgConsoleApplication
                 _populationAfterKrossingover.Add(newGen);
                 _populationAfterKrossingover.Add(newGen2);
             }
+            Worker.PopulationsShowAfterAndBeforeKrossingover("После мутации/кроссинговера транслакация",
+                                                             _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
         private static void MutationDeleciyaDvuhTochechnaya()
@@ -545,6 +530,8 @@ namespace GenAlgConsoleApplication
                 }
                 _populationAfterKrossingover.Add(newGen);
             }
+            Worker.PopulationsShowAfterAndBeforeMutation("После мутации делеции двухточечной",
+                                                         _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
         private static void KrossingoverUniversal()
@@ -592,80 +579,10 @@ namespace GenAlgConsoleApplication
                 _populationAfterKrossingover.Add(newGen);
                 _populationAfterKrossingover.Add(newGen2);
             }
-        }
 
-        private static void PopulationsShow(string str)
-        {
-            Console.WriteLine(str);
-            for (int i = 0; i < PERSON_COUNT; i++)
-            {
-                Console.Write(i + ": ");
-                PopulationShow(_population[i]);
-                Console.WriteLine();
-            }
-        }
-
-        private static void PopulationsShowAfterAndBeforeKrossingover(string str, string razrivMessage = "точки разрыва=")
-        {
-            //показываю для каждой пары популяций до и после значения и точки разрыва
-            Console.WriteLine(str);
-            for (int i = 0; i < PERSON_COUNT; i += 2)
-            {
-                Console.Write("ДО: \r\n" + i + ": ");
-                PopulationShow(_population[i]);
-                Console.WriteLine();
-                Console.Write(i + 1 + ": ");
-                PopulationShow(_population[i + 1]);
-                Console.WriteLine();
-                Console.Write("ПОСЛЕ: ");
-                if (_tochkiRazriva[i / 2].Count > 0)
-                {
-                    Console.Write(razrivMessage);
-                    for (int x = 0; x < _tochkiRazriva[i / 2].Count;x++ )
-                    {
-                        Console.Write(" " + _tochkiRazriva[i / 2][x]);
-                    }
-                }
-                Console.Write("\r\n" + i + ": ");
-                PopulationShow(_populationAfterKrossingover[i]);
-                Console.WriteLine();
-                Console.Write(i + 1 + ": ");
-                PopulationShow(_populationAfterKrossingover[i + 1]);
-                Console.WriteLine("\r\n______________________________");
-            }
-        }
-
-        private static void PopulationsShowAfterAndBeforeMutation(string str)
-        {
-            //показываю для каждой пары популяций до и после значения и точки разрыва
-            Console.WriteLine(str);
-            for (int i = 0; i < PERSON_COUNT; i++)
-            {
-                Console.Write("ДО: \r\n" + i + ": ");
-                PopulationShow(_population[i]);
-                Console.WriteLine();
-                Console.Write("ПОСЛЕ: ");
-                if (_tochkiRazriva[i].Count > 0)
-                {
-                    Console.Write("точки мутации=");
-                    for (int x = 0; x < _tochkiRazriva[i].Count; x++)
-                    {
-                        Console.Write(" " + _tochkiRazriva[i][x]);
-                    }
-                }
-                Console.Write("\r\n" + i + ": ");
-                PopulationShow(_populationAfterKrossingover[i]);
-                Console.WriteLine();
-                Console.WriteLine("\r\n______________________________");
-            }
-        }
-
-        private static void PopulationShow(List<int> population)
-        {
-            for (int j = 0; j < GEN_COUNT; j++)
-            {
-                Console.Write("{0,4} ", population[j]);
-            }
+            Worker.PopulationsShowAfterAndBeforeKrossingover("После кроссинговера унивесального",
+                                                             _population, _populationAfterKrossingover, _tochkiRazriva,
+                                                             "маска=");
         }
     }
 }
