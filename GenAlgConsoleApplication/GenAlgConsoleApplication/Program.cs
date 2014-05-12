@@ -55,6 +55,8 @@ namespace GenAlgConsoleApplication
             Worker.PopulationsShow("Начальные популяции", _population);
             KrossingoverUniversal();
             KrossingoverZhadniy.Execute(2, 8);
+
+            Console.ReadLine();
         }
 
         private static void GenerateNotUniquePopulation(int minValue, int maxValue)
