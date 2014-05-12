@@ -18,15 +18,15 @@ namespace GenAlgConsoleApplication
         //•	Упорядочивающего одно- и двухточечный операторы кроссинговера  +/-
         //•	Частично-соответствующего одно- и двухточечному операторам кроссинговера +/-
         //•	Циклического оператора +
-        //•	«Жадного» оператора
+        //•	«Жадного» оператора +
         //•	Одно-, двух- и трёх точечного операторов на основе принципа «золотого сечения» и чисел Фибоначчи.
 
         // Написать программу, реализующую работу основных операторов мутации и их разновидностей для различных видов хромосом и схем:
-        //а) простая мутация;
+        //а) простая мутация; //не нашёл
         //б) точечная мутация;
         //в) мутация обмена (одно- и двухточечная);+
-        //г) мутация на основе принципа «золотого сечения»;
-        //д) мутация на основе чисел Фибоначчи;
+        //г) мутация на основе принципа «золотого сечения»; +/?
+        //д) мутация на основе чисел Фибоначчи; /?
         //е) инверсия;+
         //ж) транслокация;+
         //з) делеция.+
@@ -49,6 +49,7 @@ namespace GenAlgConsoleApplication
             MutationInversiyaDvuhTochechnaya();
             KrossingoverMutationTranslakation();
             MutationDeleciyaDvuhTochechnaya();
+            MutationZolotoeSechenie();
 
             GenerateNotUniquePopulation(0, 1);
             Worker.PopulationsShow("Начальные популяции", _population);
@@ -531,6 +532,35 @@ namespace GenAlgConsoleApplication
                 _populationAfterKrossingover.Add(newGen);
             }
             Worker.PopulationsShowAfterAndBeforeMutation("После мутации делеции двухточечной",
+                                                         _population, _populationAfterKrossingover, _tochkiRazriva);
+        }
+
+        private static void MutationZolotoeSechenie()
+        {
+            //информации не нашёл, поэтому логически сделал, как и одноточечную мутацию, 
+            //только точка является золотым сечение http://ru.wikipedia.org/wiki/%D0%97%D0%BE%D0%BB%D0%BE%D1%82%D0%BE%D0%B5_%D1%81%D0%B5%D1%87%D0%B5%D0%BD%D0%B8%D0%B5
+            _populationAfterKrossingover = new List<List<int>>();
+            _tochkiRazriva = new List<List<int>>();
+            var rnd = new Random();
+            var zolotoeSechenieProportion = (Math.Sqrt(5) - 1) / 2;
+            var zolotoeSechenie = (int)((GEN_COUNT+1) * zolotoeSechenieProportion);
+            for (var i = 0; i < PERSON_COUNT; i++)
+            {
+                var tochkiRazrivaSub = new List<int>();
+                tochkiRazrivaSub.Add(zolotoeSechenie);
+                _tochkiRazriva.Add(tochkiRazrivaSub);
+                var newGen = new List<int>();
+                for (var j = 0; j < GEN_COUNT; j++)
+                {
+                    newGen.Add(_population[i][j]);
+                }
+                var stakan = newGen[tochkiRazrivaSub[0] - 1];
+                newGen[tochkiRazrivaSub[0] - 1] = newGen[tochkiRazrivaSub[0]];
+                newGen[tochkiRazrivaSub[0]] = stakan;
+
+                _populationAfterKrossingover.Add(newGen);
+            }
+            Worker.PopulationsShowAfterAndBeforeMutation("После мутации одноточечной(золотое сечение)",
                                                          _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
