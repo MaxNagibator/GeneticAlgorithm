@@ -105,7 +105,10 @@ namespace GenAlgConsoleApplication
         {
             for (int j = 0; j < population.Count; j++)
             {
-                Console.Write("{0,4} ", population[j]);
+                if (population[j] != -1)
+                {
+                    Console.Write("{0,4} ", population[j]);
+                }
             }
         }
 

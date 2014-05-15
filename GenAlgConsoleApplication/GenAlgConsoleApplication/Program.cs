@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace GenAlgConsoleApplication
 {
@@ -230,8 +231,12 @@ namespace GenAlgConsoleApplication
                         newGen2.Add(_population[i + 1][j]);
                     }
                 }
-                _populationAfterKrossingover.Add(newGen);
-                _populationAfterKrossingover.Add(newGen2);
+                var b = newGen.Where(a => newGen.IndexOf(a) < tochkiRazrivaSub[0]).ToList();
+                b.AddRange(newGen.Where(a => newGen.IndexOf(a) >= tochkiRazrivaSub[0]).OrderBy(g => g));
+                var c = newGen2.Where(a => newGen2.IndexOf(a) < tochkiRazrivaSub[0]).ToList();
+                c.AddRange(newGen2.Where(a => newGen2.IndexOf(a) >= tochkiRazrivaSub[0]).OrderBy(g => g));
+                _populationAfterKrossingover.Add(b);
+                _populationAfterKrossingover.Add(c);
             }
             Worker.PopulationsShowAfterAndBeforeKrossingover("После кроссинговера упорядоченного Одноточечного",
                                                              _population, _populationAfterKrossingover, _tochkiRazriva);
