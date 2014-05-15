@@ -36,7 +36,7 @@ namespace GenAlgConsoleApplication
         {
             //пусть вся область всех генов у нас будет числа от 0 до 7
             //ВИД ГЕНА: числовой!
-            _population = Worker.GenerateUniquePopulation(PERSON_COUNT, GEN_COUNT, 0, 7);
+            _population = Worker.GenerateUniquePopulation(PERSON_COUNT, GEN_COUNT, 0, GEN_COUNT - 1);
             Worker.PopulationsShow("Начальные популяции", _population);
             KrossingoverOdnotochechniy();
             KrossingoverDvuhtochechniy();
@@ -231,6 +231,7 @@ namespace GenAlgConsoleApplication
                         newGen2.Add(_population[i + 1][j]);
                     }
                 }
+                //это сортировка как и заказывали
                 var b = newGen.Where(a => newGen.IndexOf(a) < tochkiRazrivaSub[0]).ToList();
                 b.AddRange(newGen.Where(a => newGen.IndexOf(a) >= tochkiRazrivaSub[0]).OrderBy(g => g));
                 var c = newGen2.Where(a => newGen2.IndexOf(a) < tochkiRazrivaSub[0]).ToList();
@@ -309,9 +310,15 @@ namespace GenAlgConsoleApplication
 
         private static void KrossingoverCiklicheskiy()
         {
-            //Перед началом работы одноточечного оператора кроссинговера определяется так называемая точка ОК, 
-            //или разрезающая точка ОК, которая обычно определяется случайно.
-            //Эта точка определяет место в двух хромосомах, где они должны быть «разрезаны».
+            //Циклический ОК выполняет рекомбинации согласно циклам, которые существуют при установлении 
+            //            соответствия между генами первого и второго родителей. Например, пусть популяция P 
+            //                состоит из двух хромосом P = {P1, P2}. 
+            //            Первый и второй родители и их потомок имеют вид:
+            //Р1	: 1 2 3 4 5 6 7 8 9 10 
+            //P2	: 5 3 9 1 4 8 10 2 6 7
+            //________________________
+            //P'1	: 1 3 9 4 5 8 10 2 6 7 .
+
 
             _populationAfterKrossingover = new List<List<int>>();
             _tochkiRazriva = new List<List<int>>();
@@ -319,7 +326,6 @@ namespace GenAlgConsoleApplication
             for (var i = 0; i < PERSON_COUNT; i += 2)
             {
                 var tochkiRazrivaSub = new List<int>();
-                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT + 1));
                 _tochkiRazriva.Add(tochkiRazrivaSub);
                 var newGen = new List<int>();
                 var newGen2 = new List<int>();
@@ -328,10 +334,28 @@ namespace GenAlgConsoleApplication
                     newGen.Add(-1);
                     newGen2.Add(-1);
                 }
+                bool isNeedSwitch = false;
                 for (var j = 0; j < GEN_COUNT; j++)
                 {
-                    newGen[_population[i][j]] = _population[i + 1][j];
-                    newGen2[_population[i + 1][j]] = _population[i][j];
+                    if (!newGen.Exists(x=>x == _population[i][j]))
+                    {
+                        var a = j;
+                        do
+                        {
+                            if (isNeedSwitch)
+                            {
+                                newGen[a] = _population[i + 1][a];
+                                newGen2[a] = _population[i][a];
+                            }
+                            else
+                            {
+                                newGen[a] = _population[i][a];
+                                newGen2[a] = _population[i + 1][a];
+                            }
+                            a = _population[i].IndexOf(_population[i + 1][a]);
+                        } while (a != j);
+                        isNeedSwitch = true;
+                    }
                 }
                 _populationAfterKrossingover.Add(newGen);
                 _populationAfterKrossingover.Add(newGen2);
