@@ -48,6 +48,7 @@ namespace GenAlgConsoleApplication
             MutationDvuhtochechniy();
             MutationInversiyaOdnoTochechnaya();
             MutationInversiyaDvuhTochechnaya();
+            OperatorTranslokation();
             KrossingoverMutationTranslakation();
             MutationDeleciyaDvuhTochechnaya();
 
@@ -487,8 +488,9 @@ namespace GenAlgConsoleApplication
                                                          _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
-        private static void KrossingoverMutationTranslakation()
+        private static void OperatorTranslokation()
         {
+            // эт я короче не то сделал
             //Языковая конструкция, позволяющая на основе скрещивания и инвертирования из пары 
             //родительских хромосом (или их частей) создавать две хромосомы потомков. 
             //Другими словами, он представляет собой комбинацию операторов кроссинговера и инверсии.
@@ -524,10 +526,65 @@ namespace GenAlgConsoleApplication
                 _populationAfterKrossingover.Add(newGen);
                 _populationAfterKrossingover.Add(newGen2);
             }
-            Worker.PopulationsShowAfterAndBeforeKrossingover("После мутации/кроссинговера транслакация",
+            Worker.PopulationsShowAfterAndBeforeKrossingover("Оператор транслокации (надо не надо?)",
                                                              _population, _populationAfterKrossingover, _tochkiRazriva);
         }
 
+        private static void KrossingoverMutationTranslakation()
+        {
+            //Межхромосомные перестройки часто называют транслокациями. 
+            //При этом участок хромосомы перемещается (транслоцируется) на другое место хромосомы. 
+            //Выделяют следующие типы транслокаций.
+            //Реципрокные – взаимный обмен участками негомологичных хромосом. 
+            //В отличие от кроссинговера, при транслокации происходит обмен участков хромосом различной длины. Например,
+            //P1: AB|CDEFGH
+            //P2: MNO|PQR
+            //P : MNOCDEFGH
+            //P : ABPQR.
+
+            _populationAfterKrossingover = new List<List<int>>();
+            _tochkiRazriva = new List<List<int>>();
+            var rnd = new Random();
+            for (var i = 0; i < PERSON_COUNT; i += 2)
+            {
+                var tochkiRazrivaSub = new List<int>();
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT - 1));
+                tochkiRazrivaSub.Add(rnd.Next(0, GEN_COUNT - 1));
+                tochkiRazrivaSub.Sort();
+                _tochkiRazriva.Add(tochkiRazrivaSub);
+                var newGen = new List<int>();
+                var newGen2 = new List<int>();
+
+                for (var j = 0; j < GEN_COUNT; j++)
+                {
+                    if (j < tochkiRazrivaSub[0])
+                    {
+                        newGen.Add(_population[i][j]);
+                    }
+                }
+                for (var j = tochkiRazrivaSub[1]; j < GEN_COUNT; j++)
+                {
+                        newGen.Add(_population[i + 1][j]);
+                    
+                }
+                for (var j = 0; j < GEN_COUNT; j++)
+                {
+                    if (j < tochkiRazrivaSub[1])
+                    {
+                        newGen2.Add(_population[i+1][j]);
+                    }
+                }
+                for (var j = tochkiRazrivaSub[0]; j < GEN_COUNT; j++)
+                {
+                    newGen2.Add(_population[i][j]);
+
+                }
+                _populationAfterKrossingover.Add(newGen);
+                _populationAfterKrossingover.Add(newGen2);
+            }
+            Worker.PopulationsShowAfterAndBeforeKrossingover("После мутации/кроссинговера транслакация реципрокная",
+                                                             _population, _populationAfterKrossingover, _tochkiRazriva);
+        }
         private static void MutationDeleciyaDvuhTochechnaya()
         {
             //удаление внутреннего участка хромосомы
