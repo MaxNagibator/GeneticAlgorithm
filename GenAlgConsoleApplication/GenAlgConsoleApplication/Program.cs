@@ -629,23 +629,37 @@ namespace GenAlgConsoleApplication
             //только точка является золотым сечение http://ru.wikipedia.org/wiki/%D0%97%D0%BE%D0%BB%D0%BE%D1%82%D0%BE%D0%B5_%D1%81%D0%B5%D1%87%D0%B5%D0%BD%D0%B8%D0%B5
             _populationAfterKrossingover = new List<List<int>>();
             _tochkiRazriva = new List<List<int>>();
-            var rnd = new Random();
-            var zolotoeSechenieProportion = (Math.Sqrt(5) - 1) / 2;
-            var zolotoeSechenie = (int)((GEN_COUNT+1) * zolotoeSechenieProportion);
+
+            var zolotoeSechenieProportion = (Math.Sqrt(5) - 1)/2;
             for (var i = 0; i < PERSON_COUNT; i++)
             {
+                var zolotoeSechenie = (int)((GEN_COUNT + 1) * zolotoeSechenieProportion);
                 var tochkiRazrivaSub = new List<int>();
-                tochkiRazrivaSub.Add(zolotoeSechenie);
                 _tochkiRazriva.Add(tochkiRazrivaSub);
                 var newGen = new List<int>();
                 for (var j = 0; j < GEN_COUNT; j++)
                 {
                     newGen.Add(_population[i][j]);
                 }
-                var stakan = newGen[tochkiRazrivaSub[0] - 1];
-                newGen[tochkiRazrivaSub[0] - 1] = newGen[tochkiRazrivaSub[0]];
-                newGen[tochkiRazrivaSub[0]] = stakan;
-
+                while (true)
+                {
+                    var c = newGen.Where(x => newGen.IndexOf(x) < zolotoeSechenie).ToList();
+                    for (int x = newGen.Count - 1; x >= zolotoeSechenie; x--)
+                    {
+                        c.Add(newGen[x]);
+                    }
+                    newGen = c;
+                    tochkiRazrivaSub.Add(zolotoeSechenie);
+                    //Console.WriteLine("Точка сечения: " + zolotoeSechenie);
+                    //Worker.PopulationShow(newGen);
+                    //Console.WriteLine();
+                    //Console.WriteLine("\r\n______________________________"); //можно раскоментрировать и посмотреть этапы мутации
+                    if (zolotoeSechenie == 1)
+                    {
+                        break;
+                    }
+                    zolotoeSechenie = (int) Math.Round(zolotoeSechenie*zolotoeSechenieProportion);
+                }
                 _populationAfterKrossingover.Add(newGen);
             }
             Worker.PopulationsShowAfterAndBeforeMutation("После мутации одноточечной(золотое сечение)",

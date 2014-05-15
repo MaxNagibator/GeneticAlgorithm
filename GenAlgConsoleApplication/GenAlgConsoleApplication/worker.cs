@@ -86,12 +86,15 @@ namespace GenAlgConsoleApplication
                 PopulationShow(population[i]);
                 Console.WriteLine();
                 Console.Write("ПОСЛЕ: ");
-                if (tochkiRazriva[i].Count > 0)
+                if (tochkiRazriva != null)
                 {
-                    Console.Write(razrivMessage);
-                    for (int x = 0; x < tochkiRazriva[i].Count; x++)
+                    if (tochkiRazriva[i].Count > 0)
                     {
-                        Console.Write(" " + tochkiRazriva[i][x]);
+                        Console.Write(razrivMessage);
+                        for (int x = 0; x < tochkiRazriva[i].Count; x++)
+                        {
+                            Console.Write(" " + tochkiRazriva[i][x]);
+                        }
                     }
                 }
                 Console.Write("\r\n" + i + ": ");
