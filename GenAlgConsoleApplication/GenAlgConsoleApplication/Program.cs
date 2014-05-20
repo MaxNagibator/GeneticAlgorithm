@@ -9,27 +9,28 @@ namespace GenAlgConsoleApplication
     {
         private static void Main(string[] args)
         {
-            while (true)
-            {
-                var a = Console.ReadLine();
-                Console.Clear();
-                if (a == "2")
-                {
-                    Lab2.Show();
-                }
-                if (a == "3")
-                {
-                    Lab3.Show();
-                }
-                if (a == "4")
-                {
-                    
-                }
-                if (a == "0")
-                {
-                    break;
-                }
-            }
+            Lab4.Show();
+            //while (true)
+            //{
+            //    var a = Console.ReadLine();
+            //    Console.Clear();
+            //    if (a == "2")
+            //    {
+            //        Lab2.Show();
+            //    }
+            //    if (a == "3")
+            //    {
+            //        Lab3.Show();
+            //    }
+            //    if (a == "4")
+            //    {
+            //        Lab4.Show();
+            //    }
+            //    if (a == "0")
+            //    {
+            //        break;
+            //    }
+            //}
         }
     }
 }
