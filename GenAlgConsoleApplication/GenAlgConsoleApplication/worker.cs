@@ -8,6 +8,7 @@ namespace GenAlgConsoleApplication
 {
     public class Worker
     {
+
         public static List<List<int>> GenerateUniquePopulation(int personCount, int genCount, int minValue, int maxValue)
         {
             //берём случайные от всего решения и каждому гену присваивем случайное число
