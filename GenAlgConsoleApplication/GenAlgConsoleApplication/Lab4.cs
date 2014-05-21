@@ -22,7 +22,8 @@ namespace GenAlgConsoleApplication
         public static void Show()
         {
             //•	бессознательный отбор, при котором в процессе эволюции сохраняют лучшие экземпляры;
-            Console.WriteLine("это всё бессознательный отбор - сохраняем лучшие экземпляры(сумма чисел, чем больше тем лучше):");
+            Console.WriteLine(
+                "это всё бессознательный отбор - сохраняем лучшие экземпляры(сумма чисел, чем больше тем лучше):");
             SelectionRuletkoy();
             SelectionTurnir();
             SelectionElita();
@@ -31,6 +32,10 @@ namespace GenAlgConsoleApplication
             Console.WriteLine();
             Console.WriteLine("это всё естественный отбор - приспосабливаемся к новым условиям");
             SelectionElitaEstestvenniy();
+
+            Console.WriteLine();
+            Console.WriteLine("это всё сам придумал");
+            SelectionSamPridumal();
         }
 
         private static void GenerateNotUniquePopulation(int minValue, int maxValue)
@@ -136,7 +141,7 @@ namespace GenAlgConsoleApplication
             {
                 tempCol = PERSON_COUNT/2;
             }
-            if (tempCol % 2 == 1)
+            if (tempCol%2 == 1)
             {
                 tempCol++;
             }
@@ -207,9 +212,9 @@ namespace GenAlgConsoleApplication
                 Console.Write(populationOfLifeKriteriy[i] + " ");
             }
             Console.WriteLine();
-            for (int i = 0; i < _population.Count; i ++)
+            for (int i = 0; i < _population.Count; i++)
             {
-                if (populationOfLifeKriteriy.Exists(k => k== _populationSelectionKriteriy[i]))
+                if (populationOfLifeKriteriy.Exists(k => k == _populationSelectionKriteriy[i]))
                 {
                     _populationAfterSelection.Add(_population[i]);
                 }
@@ -232,16 +237,56 @@ namespace GenAlgConsoleApplication
             _populationSelectionKriteriy = new List<int>();
 
             Console.WriteLine();
-            Console.WriteLine("Критерии отбора популяций: первый > " + maxValue / 2 + ", последний < " + maxValue/2);
+            Console.WriteLine("Критерии отбора популяций: первый > " + maxValue/2 + ", последний < " + maxValue/2);
 
             for (int i = 0; i < _population.Count; i++)
             {
-                if (_population[i].First() > maxValue / 2 && _population[i].Last() < maxValue / 2)
+                if (_population[i].First() > maxValue/2 && _population[i].Last() < maxValue/2)
                 {
                     _populationAfterSelection.Add(_population[i]);
                 }
             }
             Worker.PopulationsShow("После селекции элитной: ", _populationAfterSelection);
+        }
+
+        private static void SelectionSamPridumal()
+        {
+            //На основе полученных знаний предложить новые модификации операторов селекции и отбора. 
+            //Написать программу, реализующую разработанные схемы. Продемонстрировать работу программы на примерах.
+
+            // вобщем селекция у нас будет называться "везунчики", будут взяты со случайного места половина популяций
+            // вобщем отбор у нас будет называться "первый крупнее последнего", будут отобраны лишь те, у кого первый больше последнего
+
+            GenerateNotUniquePopulation(0, 20);
+            Console.WriteLine();
+            Console.WriteLine();
+            Worker.PopulationsShow("Селекция моя и отбор мой!!!!! Начальные популяции: ", _population);
+            _populationAfterSelection = new List<List<int>>();
+            var otobrannie = new List<List<int>>();
+
+            for (int i = 0; i < _population.Count; i++)
+            {
+                if (_population[i].First() > _population[i].Last())
+                {
+                    otobrannie.Add(_population[i]);
+                }
+            }
+            Worker.PopulationsShow("После отбора 'первый крупнее последнего': ", otobrannie);
+
+            Random rnd = new Random();
+            var number = rnd.Next(otobrannie.Count);
+            var count = otobrannie.Count%2 == 1 ? otobrannie.Count/2 + 1 : otobrannie.Count/2;
+
+            for (int i = 0; i < count; i++)
+            {
+                if (number >= otobrannie.Count)
+                {
+                    number = 0;
+                }
+                _populationAfterSelection.Add(otobrannie[number]);
+                number++;
+            }
+            Worker.PopulationsShow("После селекции 'везунчики': ", _populationAfterSelection);
         }
     }
 }
