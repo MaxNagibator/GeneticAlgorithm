@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 
 namespace GenAlgConsoleApplication
 {
@@ -9,11 +6,15 @@ namespace GenAlgConsoleApplication
     {
         private static void Main(string[] args)
         {
-            Console.WriteLine("Vvedite 2, 3 ili 4, i nazhmite 'enter', pokazhetsya labaratornaya sootvetstvuyush'aya etoy zadache");
+            Console.WriteLine("Vvedite 1, 2, 3 ili 4, i nazhmite 'enter', pokazhetsya labaratornaya sootvetstvuyush'aya etoy zadache");
             while (true)
             {
                 var a = Console.ReadLine();
                 Console.Clear();
+                if (a == "1")
+                {
+                    Lab1.Show();
+                }
                 if (a == "2")
                 {
                     Lab2.Show();
