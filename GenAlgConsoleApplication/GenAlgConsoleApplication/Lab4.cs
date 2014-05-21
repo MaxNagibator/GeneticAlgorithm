@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GenAlgConsoleApplication
 {
@@ -23,9 +21,16 @@ namespace GenAlgConsoleApplication
 
         public static void Show()
         {
+            //•	бессознательный отбор, при котором в процессе эволюции сохраняют лучшие экземпляры;
+            Console.WriteLine("это всё бессознательный отбор - сохраняем лучшие экземпляры(сумма чисел, чем больше тем лучше):");
             SelectionRuletkoy();
             SelectionTurnir();
             SelectionElita();
+
+            //•	естественный отбор, вызывающий изменения, связанные с приспособлением к новым условиям;;
+            Console.WriteLine();
+            Console.WriteLine("это всё естественный отбор - приспосабливаемся к новым условиям");
+            SelectionElitaEstestvenniy();
         }
 
         private static void GenerateNotUniquePopulation(int minValue, int maxValue)
@@ -212,5 +217,31 @@ namespace GenAlgConsoleApplication
             Worker.PopulationsShow("После селекции элитной: ", _populationAfterSelection);
         }
 
+        private static void SelectionElitaEstestvenniy()
+        {
+            //В этом случае выбираются лучшие (элитные) элементы на основе 
+            //сравнения значений ЦФ. Далее они вступают в различные преобразования, 
+            //после которых снова выбираются элитные элементы. Процесс продолжается 
+            //аналогично до тех пор, пока продолжают появляться элитные элементы.
+
+            var maxValue = 20;
+            GenerateNotUniquePopulation(0, maxValue);
+            Console.WriteLine();
+            Worker.PopulationsShow("Селекция элитная!!!!! Начальные популяции: ", _population);
+            _populationAfterSelection = new List<List<int>>();
+            _populationSelectionKriteriy = new List<int>();
+
+            Console.WriteLine();
+            Console.WriteLine("Критерии отбора популяций: первый > " + maxValue / 2 + ", последний < " + maxValue/2);
+
+            for (int i = 0; i < _population.Count; i++)
+            {
+                if (_population[i].First() > maxValue / 2 && _population[i].Last() < maxValue / 2)
+                {
+                    _populationAfterSelection.Add(_population[i]);
+                }
+            }
+            Worker.PopulationsShow("После селекции элитной: ", _populationAfterSelection);
+        }
     }
 }

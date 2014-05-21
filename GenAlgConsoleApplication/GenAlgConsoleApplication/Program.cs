@@ -9,6 +9,7 @@ namespace GenAlgConsoleApplication
     {
         private static void Main(string[] args)
         {
+            Console.WriteLine("Vvedite 2, 3 ili 4, i nazhmite 'enter', pokazhetsya labaratornaya sootvetstvuyush'aya etoy zadache");
             while (true)
             {
                 var a = Console.ReadLine();
