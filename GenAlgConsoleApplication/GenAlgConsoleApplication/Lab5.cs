@@ -100,43 +100,9 @@ namespace GenAlgConsoleApplication
                 Worker.PopulationsShow("После кроссинговера Одноточечного", populationAfterKrossingover);
 
                 var numberForMutation = rnd.Next(2);
-                var populationAfterMuttation = new List<List<int>>();
-                tochkaRazriva = rnd.Next(0, GEN_COUNT - 1);
+                var newGenMuta = GetAfterMutationInverse(populationAfterKrossingover[numberForMutation]);
 
-                var newGenMuta = new List<int>();
-                for (var j = 0; j < GEN_COUNT; j++)
-                {
-                    if (j < tochkaRazriva)
-                    {
-                        newGenMuta.Add(populationAfterKrossingover[numberForMutation][j]);
-                    }
-                    else
-                    {
-                        newGenMuta.Add(populationAfterKrossingover[numberForMutation][GEN_COUNT - j + tochkaRazriva - 1]);
-                    }
-                }
-                populationAfterMuttation.Add(newGenMuta);
-
-                Console.WriteLine("tochka invers mutat: " + tochkaRazriva);
-                Worker.PopulationsShow("После мутации инверсии Одноточечной", populationAfterMuttation);
-
-                var populationAfterMuttation2 = new List<List<int>>();
-
-                tochkaRazriva = rnd.Next(1, GEN_COUNT - 1);
-
-                var newGenMuta2 = new List<int>();
-                for (var j = 0; j < GEN_COUNT; j++)
-                {
-                    newGenMuta2.Add(populationAfterMuttation[0][j]);
-                }
-                var stakan = newGenMuta2[tochkaRazriva - 1];
-                newGenMuta2[tochkaRazriva - 1] = newGenMuta2[tochkaRazriva];
-                newGenMuta2[tochkaRazriva] = stakan;
-
-                populationAfterMuttation2.Add(newGenMuta2);
-
-                Console.WriteLine("tochka mutat: " + tochkaRazriva);
-                Worker.PopulationsShow("После мутации одноточечной", populationAfterMuttation2);
+                var newGenMuta2 = GetAfterMutation(newGenMuta);
 
 
                 var a1 = _population[populationOfLifeNumbers[0]];
@@ -148,6 +114,51 @@ namespace GenAlgConsoleApplication
                 t++;
             }
             Console.WriteLine();
+        }
+
+        private static List<int> GetAfterMutationInverse(List<int> popul)
+        {
+            var rnd = new Random();
+            var tochkaRazriva = rnd.Next(0, GEN_COUNT - 1);
+            var newGenMuta = new List<int>();
+            for (var j = 0; j < GEN_COUNT; j++)
+            {
+                if (j < tochkaRazriva)
+                {
+                    newGenMuta.Add(popul[j]);
+                }
+                else
+                {
+                    newGenMuta.Add(popul[GEN_COUNT - j + tochkaRazriva - 1]);
+                }
+            }
+            var populationAfterMuttation = new List<List<int>> {newGenMuta};
+            Console.WriteLine("tochka invers mutat: " + tochkaRazriva);
+            Worker.PopulationsShow("После мутации инверсии Одноточечной", populationAfterMuttation);
+            return newGenMuta;
+        }
+
+        private static List<int> GetAfterMutation(List<int> populationAfterMuttation)
+        {
+            var rnd = new Random();
+            var populationAfterMuttation2 = new List<List<int>>();
+
+            int tochkaRazriva = rnd.Next(1, GEN_COUNT - 1);
+
+            var newGenMuta2 = new List<int>();
+            for (var j = 0; j < GEN_COUNT; j++)
+            {
+                newGenMuta2.Add(populationAfterMuttation[j]);
+            }
+            var stakan = newGenMuta2[tochkaRazriva - 1];
+            newGenMuta2[tochkaRazriva - 1] = newGenMuta2[tochkaRazriva];
+            newGenMuta2[tochkaRazriva] = stakan;
+
+            populationAfterMuttation2.Add(newGenMuta2);
+
+            Console.WriteLine("tochka mutat: " + tochkaRazriva);
+            Worker.PopulationsShow("После мутации одноточечной", populationAfterMuttation2);
+            return newGenMuta2;
         }
 
         public static int GetIntevalValue(int number)
