@@ -6,10 +6,13 @@ namespace GenAlgConsoleApplication
 {
     public class Lab5
     {
-        //Селекция на основе рулетки +
-        //Селекция на основе заданной шкалы.
-        //Элитная селекция. +
-        //Турнирная селекция. +
+        //3.1. Выполнить одно из заданий к лабораторной работе и построить на основе описаний ГА Холланда, Голдберга и Девиса ПГА вычисления min (max) функции:
+        //а) min функции f(x) = 5x3 — 4 на интервале [1, 2, 3, 4, 5];
+        //Размер начальной популяции — 10, формирование начальной популяции — по выбору пользователя, вероятность кроссинговера — 70%, 
+        //вероятность мутации — 20%, число генераций — не менее 10.
+        //3.2. Написать программу, реализующую различные схемы ПГА с возможностью задания пользователем размера популяции, числа генераций и вероятностей ОК, ОМ и ОИ.
+        //3.3. Сравнить результаты работы ПГА по Голдбергу, Холланду и Девису.
+        //3.4. Построить графики зависимости целевой функции от числа генераций алгоритма.
 
         private const int PERSON_COUNT = 8;
         private const int GEN_COUNT = 5;
@@ -18,13 +21,14 @@ namespace GenAlgConsoleApplication
 
         public static void Show()
         {
-            var mutationShance = 20;
+            const int mutationShance = 20;
+            const int crossingShance = 70;
             var rnd = new Random();
             //а) min функции f(x) = 5x3 — 4 на интервале [1, 2, 3, 4, 5];
             GenerateNotUniquePopulation(0, 621);
             //Worker.PopulationsShow("Начальные популяции: ", _population);
             var t = 0;
-            while (t < 20)
+            while (t < 200)
             {
                 Console.WriteLine("____________________");
                 Console.WriteLine("step: "+t);
@@ -34,7 +38,12 @@ namespace GenAlgConsoleApplication
                 var parentForKrossingover = GetAfterSelection();
 
                 //krossingover
-                var populationAfterKrossingover = GetAfterCrossingover(parentForKrossingover);
+                var cr = rnd.Next(100);
+                var populationAfterKrossingover = parentForKrossingover;
+                if (cr < crossingShance)
+                {
+                    populationAfterKrossingover = GetAfterCrossingover(parentForKrossingover);
+                }
 
                 var numberForMutation = rnd.Next(2);
                 var newGenMuta = populationAfterKrossingover[numberForMutation];
@@ -53,12 +62,14 @@ namespace GenAlgConsoleApplication
                 }
 
 
-                var a1 = _population[_populationOfLifeNumbers[0]];
-                var b = _population[_populationOfLifeNumbers[1]];
-                _population.Remove(a1);
-                _population.Remove(b);
-                _population.Add(newGenMuta);
-                _population.Add(populationAfterKrossingover[numberForMutation == 0 ? 1 : 0]);
+                //var a1 = _population[_populationOfLifeNumbers[0]];
+                //var b = _population[_populationOfLifeNumbers[1]];
+                //_population.Remove(a1);
+                //_population.Remove(b);
+                //_population.Add(newGenMuta);
+                //_population.Add(populationAfterKrossingover[numberForMutation == 0 ? 1 : 0]);
+                _population[_populationOfLifeNumbers[0]]= newGenMuta;
+                _population[_populationOfLifeNumbers[1]] = populationAfterKrossingover[numberForMutation == 0 ? 1 : 0];
                 t++;
             }
             Console.WriteLine("____________________");
