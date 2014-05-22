@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace GenAlgConsoleApplication
 {
-    public class Lab5
+    public class Lab5A
     {
         //3.1. Выполнить одно из заданий к лабораторной работе и построить на основе описаний ГА Холланда, Голдберга и Девиса ПГА вычисления min (max) функции:
         //а) min функции f(x) = 5x3 — 4 на интервале [1, 2, 3, 4, 5];
@@ -14,109 +14,139 @@ namespace GenAlgConsoleApplication
         //3.3. Сравнить результаты работы ПГА по Голдбергу, Холланду и Девису.
         //3.4. Построить графики зависимости целевой функции от числа генераций алгоритма.
 
-        private const int PERSON_COUNT = 8;
-        private const int GEN_COUNT = 5;
+        private static int _personCount = 8;
+        private const int GEN_COUNT = 3;
         private static List<List<int>> _population;
         private static List<int> _populationOfLifeNumbers;
+        private static List<int> _populationFunctionValue;
+        private static List<double> _populationSelectionKriteriy;
 
         public static void Show()
         {
-            const int mutationShance = 20;
-            const int crossingShance = 70;
+            Console.WriteLine("vvedite kolichestvo popul:");
+            _personCount = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("vvedite kolichestvo generation:");
+            var tMax = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("vvedite kros shanse:");
+            var krosChanse = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("vvedite om shanse:");
+            var omChanse = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("vvedite oi shanse:");
+            var oiChanse = Convert.ToInt32(Console.ReadLine());
             var rnd = new Random();
             //а) min функции f(x) = 5x3 — 4 на интервале [1, 2, 3, 4, 5];
-            GenerateNotUniquePopulation(0, 621);
+            GenerateNotUniquePopulation(0, 1);
             //Worker.PopulationsShow("Начальные популяции: ", _population);
             var t = 0;
-            while (t < 200)
-            {
-                Console.WriteLine("____________________");
-                Console.WriteLine("step: "+t);
-                Worker.PopulationsShow("популяции: ", _population);
+            Console.WriteLine("____________________");
+            Console.WriteLine("step: " + t);
+            Worker.PopulationsShow("популяции: ", _population);
 
+            GetKriteriySelection();
+
+            while (t < tMax)
+            {
                 //selection
-                var parentForKrossingover = GetAfterSelection();
+                var selectedPopulations = GetAfterSelection();
 
                 //krossingover
                 var cr = rnd.Next(100);
-                var populationAfterKrossingover = parentForKrossingover;
-                if (cr < crossingShance)
+                if (cr < krosChanse)
                 {
-                    populationAfterKrossingover = GetAfterCrossingover(parentForKrossingover);
+                    selectedPopulations = GetAfterCrossingover(selectedPopulations);
                 }
 
                 var numberForMutation = rnd.Next(2);
-                var newGenMuta = populationAfterKrossingover[numberForMutation];
+                var newGenMuta = selectedPopulations[numberForMutation];
 
                 //mutat inverce
                 var mut = rnd.Next(100);
-                if (mut < mutationShance)
+                if (mut < oiChanse)
                 {
                     newGenMuta = GetAfterMutationInverse(newGenMuta);
                 }
                 //mutat
                 var mut2 = rnd.Next(100);
-                if (mut2 < mutationShance)
+                if (mut2 < omChanse)
                 {
                     newGenMuta = GetAfterMutation(newGenMuta);
                 }
-
-
-                //var a1 = _population[_populationOfLifeNumbers[0]];
-                //var b = _population[_populationOfLifeNumbers[1]];
-                //_population.Remove(a1);
-                //_population.Remove(b);
-                //_population.Add(newGenMuta);
-                //_population.Add(populationAfterKrossingover[numberForMutation == 0 ? 1 : 0]);
-                _population[_populationOfLifeNumbers[0]]= newGenMuta;
-                _population[_populationOfLifeNumbers[1]] = populationAfterKrossingover[numberForMutation == 0 ? 1 : 0];
+                for (int i = 0; i < 1; i++)
+                {
+                    var max = _populationFunctionValue.Max();
+                    var a = _populationFunctionValue.IndexOf(max);
+                    _population.RemoveAt(a);
+                    _populationFunctionValue.RemoveAt(a);
+                }
+                _population.Add(newGenMuta);
+                //_population.Add(selectedPopulations[numberForMutation == 0 ? 1 : 0]);
                 t++;
+
+                Console.WriteLine("____________________");
+                Console.WriteLine("step: " + t);
+                Worker.PopulationsShow("популяции: ", _population);
+
+                GetKriteriySelection();
+                if (_populationFunctionValue.Average(p => p) < 2)
+                {
+                    break;
+                }
             }
-            Console.WriteLine("____________________");
-            Console.WriteLine("step: " + t);
-            Worker.PopulationsShow("популяции: ", _population);
             Console.WriteLine();
+        }
+
+        private static void GetKriteriySelection()
+        {
+            _populationFunctionValue = new List<int>();
+            _populationSelectionKriteriy = new List<double>();
+            Console.Write("Критерии отбора популяций: ");
+            for (int i = 0; i < _population.Count; i++)
+            {
+                var value = 0;
+                for (int j = 0; j < GEN_COUNT; j++)
+                {
+                    value += _population[i][j] == 1 ? (int) Math.Pow(2, j) : 0;
+                }
+                if (value > 5 || value < 1)
+                {
+                    _populationFunctionValue.Add(999);
+                }
+                else
+                {
+                    _populationFunctionValue.Add(GetFunctionValue(value));
+                }
+                Console.Write(_populationFunctionValue[i] + " ");
+            }
+            Console.WriteLine("avg: " + _populationFunctionValue.Average(p => p));
+            for (int i = 0; i < _populationFunctionValue.Count; i++)
+            {
+                _populationSelectionKriteriy.Add(1/(double) (_populationFunctionValue[i]));
+            }
         }
 
         private static List<List<int>> GetAfterSelection()
         {
-            var populationSelectionKriteriy = new List<int>();
-            Console.Write("Критерии отбора популяций: ");
-            for (int i = 0; i < _population.Count; i++)
-            {
-                var kriteriy = 0;
-                for (int j = 0; j < GEN_COUNT; j++)
-                {
-                    kriteriy += Math.Abs(_population[i][j] - GetFunctionValue(GetIntevalValue(j)));
-                }
-                populationSelectionKriteriy.Add(kriteriy);
-                Console.Write(populationSelectionKriteriy[i] + " ");
-            }
-            Console.WriteLine("avg: " + populationSelectionKriteriy.Average(p => p));
-
-            var parentForKrossingover = new List<List<int>>();
+        var parentForKrossingover = new List<List<int>>();
             var rnd = new Random();
             _populationOfLifeNumbers = new List<int>();
-            var positionOfLifeNumbers = new List<int>();
             int x = 0;
             while (x < 2)
             {
-                var numberOfLife = rnd.Next(populationSelectionKriteriy.Sum());
+                var numberOfLife = rnd.NextDouble() * _populationSelectionKriteriy.Sum();
                 for (int j = 0; j < _population.Count; j++)
                 {
-                    if (populationSelectionKriteriy[j] > numberOfLife)
+                    if (_populationSelectionKriteriy[j] > numberOfLife)
                     {
                         if (!_populationOfLifeNumbers.Exists(a => a == j))
                         {
                             _populationOfLifeNumbers.Add(j);
-                            positionOfLifeNumbers.Add(numberOfLife);
                             x++;
                             break;
                         }
                     }
                     else
                     {
-                        numberOfLife -= populationSelectionKriteriy[j];
+                        numberOfLife -= _populationSelectionKriteriy[j];
                     }
                 }
             }
@@ -220,7 +250,7 @@ namespace GenAlgConsoleApplication
             //берём случайные от всего решения и каждому гену присваивем случайное число
             _population = new List<List<int>>();
             var rnd = new Random();
-            for (int i = 0; i < PERSON_COUNT; i++)
+            for (int i = 0; i < _personCount; i++)
             {
                 var gen = new List<int>();
                 for (int j = 0; j < GEN_COUNT; j++)

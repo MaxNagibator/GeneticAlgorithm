@@ -50,7 +50,8 @@
     <Compile Include="Lab3.cs" />
     <Compile Include="Lab4.cs" />
     <Compile Include="Lab1.cs" />
-    <Compile Include="Lab5.cs" />
+    <Compile Include="Lab5A.cs" />
+    <Compile Include="Lab5B.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

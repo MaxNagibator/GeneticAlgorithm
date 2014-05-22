@@ -4,7 +4,7 @@ namespace GenAlgConsoleApplication
 {
     public class Lab1
     {
-        private const int PERSON_COUNT = 1;
+        private const int PERSON_COUNT = 2;
         private const int GEN_COUNT = 8;
         private static int[,] _population;
 
@@ -21,7 +21,6 @@ namespace GenAlgConsoleApplication
             PopulationShow("Focus");
             Console.WriteLine();
             Lab1PopulationTypeGeneration.Show();
-            Console.ReadLine();
         }
 
         private static void GenerateOdeyaloPopulation()
@@ -53,25 +52,20 @@ namespace GenAlgConsoleApplication
 
         private static void GenerateFocusPopulation()
         {
-            _population = new int[PERSON_COUNT, GEN_COUNT];
+            _population = new int[PERSON_COUNT,GEN_COUNT];
             var rnd = new Random();
             const int t = 100;
-            var a = (int)(t * 0.25 + rnd.Next((int)(t * 0.5)));
-            var k = a / (2 * GEN_COUNT);
-            for (int x = 0; x < GEN_COUNT / 2; x++)
+            for (int i = 0; i < PERSON_COUNT; i++)
             {
-                var y = 2 * x + k;
-                if ((a + y) < t)
+                var a = (int)(t * 0.25 + rnd.Next((int)(t * 0.5)));
+                var k = a / (2 * GEN_COUNT);
+                for (int x = 0; x < GEN_COUNT/2; x++)
                 {
-                    _population[0, x] = a + y;
+                    _population[i, x] = a + k*x;
                 }
-            }
-            for (int x = GEN_COUNT / 2; x < GEN_COUNT; x++)
-            {
-                var y = 2 * (x - GEN_COUNT / 2 + 1) + k;
-                if ((a - y) >= 0)
+                for (int x = GEN_COUNT/2; x < GEN_COUNT; x++)
                 {
-                    _population[0, x] = a - y;
+                    _population[i, x] = a - k*(x - GEN_COUNT/2 + 1);
                 }
             }
         }

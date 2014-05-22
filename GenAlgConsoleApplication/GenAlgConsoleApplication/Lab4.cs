@@ -64,7 +64,7 @@ namespace GenAlgConsoleApplication
             //значением ЦФ имеет большую вероятность для выбора.
 
             GenerateNotUniquePopulation(0, 20);
-            Worker.PopulationsShow("Селекция рулеткой!!!!! Начальные популяции: ", _population);
+            Worker.PopulationsShow("Селекция рулеткой!!!!! Начальная популяция: ", _population);
 
             _populationAfterSelection = new List<List<int>>();
             _populationSelectionKriteriy = new List<int>();
@@ -131,7 +131,7 @@ namespace GenAlgConsoleApplication
             GenerateNotUniquePopulation(0, 20);
             Console.WriteLine();
             Console.WriteLine();
-            Worker.PopulationsShow("Селекция турнир!!!!! Начальные популяции: ", _population);
+            Worker.PopulationsShow("Селекция турнир!!!!! Начальная популяция: ", _population);
             _populationTemp = new List<List<int>>();
             _populationAfterSelection = new List<List<int>>();
             _populationSelectionKriteriy = new List<int>();
@@ -150,8 +150,8 @@ namespace GenAlgConsoleApplication
                 _populationTemp.Add(_population[i]);
             }
 
-            Worker.PopulationsShow("Популяции выбранные для турнира: ", _populationTemp);
-            Console.Write("Критерий отбора турнирных популяций: ");
+            Worker.PopulationsShow("Экземпляры выбранные для турнира: ", _populationTemp);
+            Console.Write("Критерий отбора турнирная популяция: ");
             for (int i = 0; i < _populationTemp.Count; i++)
             {
                 var sum = 0;
@@ -187,11 +187,11 @@ namespace GenAlgConsoleApplication
             GenerateNotUniquePopulation(0, 20);
             Console.WriteLine();
             Console.WriteLine();
-            Worker.PopulationsShow("Селекция элитная!!!!! Начальные популяции: ", _population);
+            Worker.PopulationsShow("Селекция элитная!!!!! Начальная популяция: ", _population);
             _populationAfterSelection = new List<List<int>>();
             _populationSelectionKriteriy = new List<int>();
 
-            Console.Write("Критерии отбора популяций: ");
+            Console.Write("Критерии отбора Экземпляров: ");
             for (int i = 0; i < _population.Count; i++)
             {
                 var sum = 0;
@@ -206,7 +206,7 @@ namespace GenAlgConsoleApplication
             populationOfLifeKriteriy.RemoveRange(0, populationOfLifeKriteriy.Count/2);
 
             Console.WriteLine();
-            Console.Write("Лучшие критерии отбора популяций: ");
+            Console.Write("Лучшие критерии отбора экземпляров: ");
             for (int i = 0; i < populationOfLifeKriteriy.Count; i++)
             {
                 Console.Write(populationOfLifeKriteriy[i] + " ");
@@ -232,7 +232,7 @@ namespace GenAlgConsoleApplication
             var maxValue = 20;
             GenerateNotUniquePopulation(0, maxValue);
             Console.WriteLine();
-            Worker.PopulationsShow("Селекция элитная!!!!! Начальные популяции: ", _population);
+            Worker.PopulationsShow("Естественный отбор!!!!! Начальные популяции: ", _population);
             _populationAfterSelection = new List<List<int>>();
             _populationSelectionKriteriy = new List<int>();
 
@@ -246,7 +246,7 @@ namespace GenAlgConsoleApplication
                     _populationAfterSelection.Add(_population[i]);
                 }
             }
-            Worker.PopulationsShow("После селекции элитной: ", _populationAfterSelection);
+            Worker.PopulationsShow("После естественного отбора: ", _populationAfterSelection);
         }
 
         private static void SelectionSamPridumal()

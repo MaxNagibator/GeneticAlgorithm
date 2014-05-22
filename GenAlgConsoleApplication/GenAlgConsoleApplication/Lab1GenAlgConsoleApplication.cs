@@ -18,7 +18,6 @@ namespace GenAlgConsoleApplication
             PopulationShow("chislovie");
             GenerateVektorniePopulation();
             PopulationVektorShow("vektornie");
-            Console.ReadLine();
         }
 
         private static void GenerateBinaryPopulation()
@@ -64,7 +63,7 @@ namespace GenAlgConsoleApplication
             }
         }
 
-        private static void GenerateVektorniePopulation()
+        private static void GenerateVektorniePopulation() //Генерация векторных популяций
         {
             _populationVektor = new int[PERSON_COUNT, GEN_COUNT, VEKTOR_LENGTH];
             var rnd = new Random();
