@@ -14,10 +14,12 @@ namespace GenAlgConsoleApplication
         private const int PERSON_COUNT = 8;
         private const int GEN_COUNT = 5;
         private static List<List<int>> _population;
-        private static List<int> _populationSelectionKriteriy;
+        private static List<int> _populationOfLifeNumbers;
 
         public static void Show()
         {
+            var mutationShance = 20;
+            var rnd = new Random();
             //а) min функции f(x) = 5x3 — 4 на интервале [1, 2, 3, 4, 5];
             GenerateNotUniquePopulation(0, 621);
             //Worker.PopulationsShow("Начальные популяции: ", _population);
@@ -28,92 +30,120 @@ namespace GenAlgConsoleApplication
                 Console.WriteLine("step: "+t);
                 Worker.PopulationsShow("популяции: ", _population);
 
-                _populationSelectionKriteriy = new List<int>();
-                Console.Write("Критерии отбора популяций: ");
-                for (int i = 0; i < _population.Count; i++)
-                {
-                    var kriteriy = 0;
-                    for (int j = 0; j < GEN_COUNT; j++)
-                    {
-                        kriteriy += Math.Abs(_population[i][j] - GetFunctionValue(GetIntevalValue(j)));
-                    }
-                    _populationSelectionKriteriy.Add(kriteriy);
-                    Console.Write(_populationSelectionKriteriy[i] + " ");
-                }
-                Console.WriteLine("avg: " + _populationSelectionKriteriy.Average(p => p));
-                var parentForKrossingover = new List<List<int>>();
-
-                Random rnd = new Random();
-                var populationOfLifeNumbers = new List<int>();
-                var positionOfLifeNumbers = new List<int>();
-                int x = 0;
-                while (x < 2)
-                {
-                    var numberOfLife = rnd.Next(_populationSelectionKriteriy.Sum());
-                    for (int j = 0; j < _population.Count; j++)
-                    {
-                        if (_populationSelectionKriteriy[j] > numberOfLife)
-                        {
-                            if (!populationOfLifeNumbers.Exists(a => a == j))
-                            {
-                                populationOfLifeNumbers.Add(j);
-                                positionOfLifeNumbers.Add(numberOfLife);
-                                x++;
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            numberOfLife -= _populationSelectionKriteriy[j];
-                        }
-                    }
-                }
-                foreach (var populationOfLifeNumber in populationOfLifeNumbers)
-                {
-                    parentForKrossingover.Add(_population[populationOfLifeNumber]);
-                }
-                Worker.PopulationsShow("После селекции рулеточкой: ", parentForKrossingover);
+                //selection
+                var parentForKrossingover = GetAfterSelection();
 
                 //krossingover
-                var populationAfterKrossingover = new List<List<int>>();
-                var tochkaRazriva = 0;
-                tochkaRazriva = rnd.Next(0, GEN_COUNT + 1);
-                var newGen = new List<int>();
-                var newGen2 = new List<int>();
-                for (var j = 0; j < GEN_COUNT; j++)
-                {
-                    if (j >= tochkaRazriva)
-                    {
-                        newGen.Add(parentForKrossingover[1][j]);
-                        newGen2.Add(parentForKrossingover[0][j]);
-                    }
-                    else
-                    {
-                        newGen.Add(parentForKrossingover[0][j]);
-                        newGen2.Add(parentForKrossingover[1][j]);
-                    }
-                }
-                populationAfterKrossingover.Add(newGen);
-                populationAfterKrossingover.Add(newGen2);
-
-                Console.WriteLine("tochkaRazriva: " + tochkaRazriva);
-                Worker.PopulationsShow("После кроссинговера Одноточечного", populationAfterKrossingover);
+                var populationAfterKrossingover = GetAfterCrossingover(parentForKrossingover);
 
                 var numberForMutation = rnd.Next(2);
-                var newGenMuta = GetAfterMutationInverse(populationAfterKrossingover[numberForMutation]);
+                var newGenMuta = populationAfterKrossingover[numberForMutation];
 
-                var newGenMuta2 = GetAfterMutation(newGenMuta);
+                //mutat inverce
+                var mut = rnd.Next(100);
+                if (mut < mutationShance)
+                {
+                    newGenMuta = GetAfterMutationInverse(newGenMuta);
+                }
+                //mutat
+                var mut2 = rnd.Next(100);
+                if (mut2 < mutationShance)
+                {
+                    newGenMuta = GetAfterMutation(newGenMuta);
+                }
 
 
-                var a1 = _population[populationOfLifeNumbers[0]];
-                var b = _population[populationOfLifeNumbers[1]];
+                var a1 = _population[_populationOfLifeNumbers[0]];
+                var b = _population[_populationOfLifeNumbers[1]];
                 _population.Remove(a1);
                 _population.Remove(b);
-                _population.Add(newGenMuta2);
+                _population.Add(newGenMuta);
                 _population.Add(populationAfterKrossingover[numberForMutation == 0 ? 1 : 0]);
                 t++;
             }
+            Console.WriteLine("____________________");
+            Console.WriteLine("step: " + t);
+            Worker.PopulationsShow("популяции: ", _population);
             Console.WriteLine();
+        }
+
+        private static List<List<int>> GetAfterSelection()
+        {
+            var populationSelectionKriteriy = new List<int>();
+            Console.Write("Критерии отбора популяций: ");
+            for (int i = 0; i < _population.Count; i++)
+            {
+                var kriteriy = 0;
+                for (int j = 0; j < GEN_COUNT; j++)
+                {
+                    kriteriy += Math.Abs(_population[i][j] - GetFunctionValue(GetIntevalValue(j)));
+                }
+                populationSelectionKriteriy.Add(kriteriy);
+                Console.Write(populationSelectionKriteriy[i] + " ");
+            }
+            Console.WriteLine("avg: " + populationSelectionKriteriy.Average(p => p));
+
+            var parentForKrossingover = new List<List<int>>();
+            var rnd = new Random();
+            _populationOfLifeNumbers = new List<int>();
+            var positionOfLifeNumbers = new List<int>();
+            int x = 0;
+            while (x < 2)
+            {
+                var numberOfLife = rnd.Next(populationSelectionKriteriy.Sum());
+                for (int j = 0; j < _population.Count; j++)
+                {
+                    if (populationSelectionKriteriy[j] > numberOfLife)
+                    {
+                        if (!_populationOfLifeNumbers.Exists(a => a == j))
+                        {
+                            _populationOfLifeNumbers.Add(j);
+                            positionOfLifeNumbers.Add(numberOfLife);
+                            x++;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        numberOfLife -= populationSelectionKriteriy[j];
+                    }
+                }
+            }
+            foreach (var populationOfLifeNumber in _populationOfLifeNumbers)
+            {
+                parentForKrossingover.Add(_population[populationOfLifeNumber]);
+            }
+            Worker.PopulationsShow("После селекции рулеточкой: ", parentForKrossingover);
+            return parentForKrossingover;
+        }
+
+        private static List<List<int>> GetAfterCrossingover(List<List<int>> parentForKrossingover)
+        {
+            var rnd = new Random();
+            var populationAfterKrossingover = new List<List<int>>();
+            var tochkaRazriva = 0;
+            tochkaRazriva = rnd.Next(0, GEN_COUNT + 1);
+            var newGen = new List<int>();
+            var newGen2 = new List<int>();
+            for (var j = 0; j < GEN_COUNT; j++)
+            {
+                if (j >= tochkaRazriva)
+                {
+                    newGen.Add(parentForKrossingover[1][j]);
+                    newGen2.Add(parentForKrossingover[0][j]);
+                }
+                else
+                {
+                    newGen.Add(parentForKrossingover[0][j]);
+                    newGen2.Add(parentForKrossingover[1][j]);
+                }
+            }
+            populationAfterKrossingover.Add(newGen);
+            populationAfterKrossingover.Add(newGen2);
+
+            Console.WriteLine("tochkaRazriva: " + tochkaRazriva);
+            Worker.PopulationsShow("После кроссинговера Одноточечного", populationAfterKrossingover);
+            return populationAfterKrossingover;
         }
 
         private static List<int> GetAfterMutationInverse(List<int> popul)
