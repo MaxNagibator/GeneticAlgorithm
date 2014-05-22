@@ -6,7 +6,7 @@ namespace GenAlgConsoleApplication
     {
         private static void Main(string[] args)
         {
-            //Lab5.Show();
+            Lab5B.Show();
             Console.WriteLine("Vvedite 1, 2, 3 ili 4, i nazhmite 'enter', pokazhetsya labaratornaya sootvetstvuyush'aya etoy zadache");
             while (true)
             {
@@ -28,9 +28,13 @@ namespace GenAlgConsoleApplication
                 {
                     Lab4.Show();
                 }
-                if (a == "5")
+                if (a == "5A")
                 {
                     Lab5A.Show();
+                }
+                if (a == "5B")
+                {
+                    Lab5B.Show();
                 }
                 if (a == "0")
                 {

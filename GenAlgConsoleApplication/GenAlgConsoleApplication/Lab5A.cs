@@ -7,7 +7,7 @@ namespace GenAlgConsoleApplication
     public class Lab5A
     {
         //3.1. Выполнить одно из заданий к лабораторной работе и построить на основе описаний ГА Холланда, Голдберга и Девиса ПГА вычисления min (max) функции:
-        //а) min функции f(x) = 5x3 — 4 на интервале [1, 2, 3, 4, 5];
+        //в) max функции f(x) = 3x3 - 2x + 5 на интервале [1 - 10];
         //Размер начальной популяции — 10, формирование начальной популяции — по выбору пользователя, вероятность кроссинговера — 70%, 
         //вероятность мутации — 20%, число генераций — не менее 10.
         //3.2. Написать программу, реализующую различные схемы ПГА с возможностью задания пользователем размера популяции, числа генераций и вероятностей ОК, ОМ и ОИ.
@@ -15,7 +15,7 @@ namespace GenAlgConsoleApplication
         //3.4. Построить графики зависимости целевой функции от числа генераций алгоритма.
 
         private static int _personCount = 8;
-        private const int GEN_COUNT = 3;
+        private const int GEN_COUNT = 4;
         private static List<List<int>> _population;
         private static List<int> _populationOfLifeNumbers;
         private static List<int> _populationFunctionValue;
@@ -23,6 +23,7 @@ namespace GenAlgConsoleApplication
 
         public static void Show()
         {
+            Console.WriteLine("Холланд");
             Console.WriteLine("vvedite kolichestvo popul:");
             _personCount = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("vvedite kolichestvo generation:");
@@ -33,10 +34,14 @@ namespace GenAlgConsoleApplication
             var omChanse = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("vvedite oi shanse:");
             var oiChanse = Convert.ToInt32(Console.ReadLine());
+            //_personCount = 8;
+            //var tMax = 20;
+            //var krosChanse = 70;
+            //var omChanse = 10;
+            //var oiChanse = 10;
             var rnd = new Random();
-            //а) min функции f(x) = 5x3 — 4 на интервале [1, 2, 3, 4, 5];
+            //в) max функции f(x) = 3x3 - 2x + 5 на интервале [1 - 10];
             GenerateNotUniquePopulation(0, 1);
-            //Worker.PopulationsShow("Начальные популяции: ", _population);
             var t = 0;
             Console.WriteLine("____________________");
             Console.WriteLine("step: " + t);
@@ -73,8 +78,8 @@ namespace GenAlgConsoleApplication
                 }
                 for (int i = 0; i < 1; i++)
                 {
-                    var max = _populationFunctionValue.Max();
-                    var a = _populationFunctionValue.IndexOf(max);
+                    var min = _populationFunctionValue.Min();
+                    var a = _populationFunctionValue.IndexOf(min);
                     _population.RemoveAt(a);
                     _populationFunctionValue.RemoveAt(a);
                 }
@@ -87,7 +92,7 @@ namespace GenAlgConsoleApplication
                 Worker.PopulationsShow("популяции: ", _population);
 
                 GetKriteriySelection();
-                if (_populationFunctionValue.Average(p => p) < 2)
+                if (_populationFunctionValue.Average(p => p) > 2900)
                 {
                     break;
                 }
@@ -107,9 +112,9 @@ namespace GenAlgConsoleApplication
                 {
                     value += _population[i][j] == 1 ? (int) Math.Pow(2, j) : 0;
                 }
-                if (value > 5 || value < 1)
+                if (value > 10)
                 {
-                    _populationFunctionValue.Add(999);
+                    _populationFunctionValue.Add(0);
                 }
                 else
                 {
@@ -120,7 +125,7 @@ namespace GenAlgConsoleApplication
             Console.WriteLine("avg: " + _populationFunctionValue.Average(p => p));
             for (int i = 0; i < _populationFunctionValue.Count; i++)
             {
-                _populationSelectionKriteriy.Add(1/(double) (_populationFunctionValue[i]));
+                _populationSelectionKriteriy.Add(_populationFunctionValue[i]);
             }
         }
 
@@ -168,7 +173,7 @@ namespace GenAlgConsoleApplication
             var newGen2 = new List<int>();
             for (var j = 0; j < GEN_COUNT; j++)
             {
-                if (j >= tochkaRazriva)
+                if (j <= tochkaRazriva)
                 {
                     newGen.Add(parentForKrossingover[1][j]);
                     newGen2.Add(parentForKrossingover[0][j]);
@@ -232,17 +237,10 @@ namespace GenAlgConsoleApplication
             return newGenMuta2;
         }
 
-        public static int GetIntevalValue(int number)
-        {
-            //на интервале [1, 2, 3, 4, 5];
-            var a = new[] { 1, 2, 3, 4, 5 };
-            return a[number];
-        }
-
         public static int GetFunctionValue(int x)
         {
-            //функции f(x) = 5x3 — 4;
-            return x*x*x*5 - 4;
+            //в) max функции f(x) = 3x3 - 2x + 5 на интервале [1 - 10];
+            return 3*x*x*x - x*2 + 5;
         }
 
         private static void GenerateNotUniquePopulation(int minValue, int maxValue)
