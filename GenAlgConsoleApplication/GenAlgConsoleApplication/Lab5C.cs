@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace GenAlgConsoleApplication
 {
-    public class Lab5B
+    public class Lab5C
     {
         //3.1. Выполнить одно из заданий к лабораторной работе и построить на основе описаний ГА Холланда, Голдберга и Девиса ПГА вычисления min (max) функции:
         //в) max функции f(x) = 3x3 - 2x + 5 на интервале [1 - 10];
@@ -24,7 +24,7 @@ namespace GenAlgConsoleApplication
 
         public static void Show()
         {
-            Console.WriteLine("Голдберг");
+            Console.WriteLine("Девис");
             //Console.WriteLine("vvedite kolichestvo popul:");
             //_personCount = Convert.ToInt32(Console.ReadLine());
             //Console.WriteLine("vvedite kolichestvo generation:");
@@ -47,7 +47,7 @@ namespace GenAlgConsoleApplication
             Console.WriteLine("step: " + t);
             Worker.PopulationsShow("популяции: ", _population);
 
-            GetKriteriySelection();
+            GetKriteriySelection(_population);
 
             while (t < tMax)
             {
@@ -57,13 +57,34 @@ namespace GenAlgConsoleApplication
                 //krossingover
                 selectedPopulations = GetAfterCrossingover(selectedPopulations);
                 var afterMuta = GetAfterMutation(selectedPopulations, omChanse);
-                _population = afterMuta;
+
+                var deleteCOunt = _population.Count/2;
+                for (int i = 0; i < deleteCOunt; i++)
+                {
+                    var min = _populationFunctionValue.Min();
+                    var a = _populationFunctionValue.IndexOf(min);
+                    _population.RemoveAt(a);
+                    _populationFunctionValue.RemoveAt(a);
+                }
+
+
+
+                GetKriteriySelection(afterMuta);
+                deleteCOunt = afterMuta.Count / 2;
+                for (int i = 0; i < deleteCOunt; i++)
+                {
+                    var min = _populationFunctionValue.Min();
+                    var a = _populationFunctionValue.IndexOf(min);
+                    afterMuta.RemoveAt(a);
+                    _populationFunctionValue.RemoveAt(a);
+                }
+                _population.AddRange(afterMuta);
                 t++;
                 Console.WriteLine("____________________");
                 Console.WriteLine("step: " + t);
                 Worker.PopulationsShow("популяции: ", _population);
 
-                GetKriteriySelection();
+                GetKriteriySelection(_population);
                 if (_populationFunctionValue.Average(p => p) > 2900)
                 {
                     break;
@@ -72,17 +93,17 @@ namespace GenAlgConsoleApplication
             Console.WriteLine();
         }
 
-        private static void GetKriteriySelection()
+        private static void GetKriteriySelection(List<List<int>> population)
         {
             _populationFunctionValue = new List<int>();
             _populationSelectionKriteriy = new List<double>();
             Console.Write("Критерии отбора популяций: ");
-            for (int i = 0; i < _population.Count; i++)
+            for (int i = 0; i < population.Count; i++)
             {
                 var value = 0;
                 for (int j = 0; j < GEN_COUNT; j++)
                 {
-                    value += _population[i][j] == 1 ? (int)Math.Pow(2, j) : 0;
+                    value += population[i][j] == 1 ? (int)Math.Pow(2, j) : 0;
                 }
                 if (value > 10)
                 {
@@ -114,9 +135,9 @@ namespace GenAlgConsoleApplication
                 {
                     if (_populationSelectionKriteriy[j] > numberOfLife)
                     {
-                            _populationOfLifeNumbers.Add(j);
-                            x++;
-                            break;
+                        _populationOfLifeNumbers.Add(j);
+                        x++;
+                        break;
                     }
                     numberOfLife -= _populationSelectionKriteriy[j];
                 }
