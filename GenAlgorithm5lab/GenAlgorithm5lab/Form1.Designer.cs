@@ -51,7 +51,7 @@
             // 
             // personCountTextBox
             // 
-            this.personCountTextBox.Location = new System.Drawing.Point(-1, 30);
+            this.personCountTextBox.Location = new System.Drawing.Point(132, 34);
             this.personCountTextBox.Name = "personCountTextBox";
             this.personCountTextBox.Size = new System.Drawing.Size(100, 20);
             this.personCountTextBox.TabIndex = 0;
@@ -60,7 +60,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(-1, 14);
+            this.label1.Location = new System.Drawing.Point(132, 18);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(130, 13);
             this.label1.TabIndex = 4;
@@ -69,7 +69,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(-1, 53);
+            this.label3.Location = new System.Drawing.Point(132, 57);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(194, 13);
             this.label3.TabIndex = 7;
@@ -77,7 +77,7 @@
             // 
             // tMaxTextBox
             // 
-            this.tMaxTextBox.Location = new System.Drawing.Point(-1, 69);
+            this.tMaxTextBox.Location = new System.Drawing.Point(132, 73);
             this.tMaxTextBox.Name = "tMaxTextBox";
             this.tMaxTextBox.Size = new System.Drawing.Size(100, 20);
             this.tMaxTextBox.TabIndex = 6;
@@ -86,7 +86,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(203, 52);
+            this.label2.Location = new System.Drawing.Point(336, 56);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(113, 13);
             this.label2.TabIndex = 9;
@@ -94,7 +94,7 @@
             // 
             // krosChanseTextBox
             // 
-            this.krosChanseTextBox.Location = new System.Drawing.Point(203, 68);
+            this.krosChanseTextBox.Location = new System.Drawing.Point(336, 72);
             this.krosChanseTextBox.Name = "krosChanseTextBox";
             this.krosChanseTextBox.Size = new System.Drawing.Size(100, 20);
             this.krosChanseTextBox.TabIndex = 8;
@@ -103,7 +103,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(334, 14);
+            this.label4.Location = new System.Drawing.Point(467, 18);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(78, 13);
             this.label4.TabIndex = 11;
@@ -111,7 +111,7 @@
             // 
             // omChanseTextBox
             // 
-            this.omChanseTextBox.Location = new System.Drawing.Point(334, 30);
+            this.omChanseTextBox.Location = new System.Drawing.Point(467, 34);
             this.omChanseTextBox.Name = "omChanseTextBox";
             this.omChanseTextBox.Size = new System.Drawing.Size(100, 20);
             this.omChanseTextBox.TabIndex = 10;
@@ -119,7 +119,7 @@
             // 
             // uiExecuteButton
             // 
-            this.uiExecuteButton.Location = new System.Drawing.Point(487, 22);
+            this.uiExecuteButton.Location = new System.Drawing.Point(620, 26);
             this.uiExecuteButton.Name = "uiExecuteButton";
             this.uiExecuteButton.Size = new System.Drawing.Size(311, 67);
             this.uiExecuteButton.TabIndex = 12;
@@ -166,7 +166,7 @@
             this.groupBox1.Controls.Add(this.uiGoldbergRadioButton);
             this.groupBox1.Controls.Add(this.uiDevisRadioButton);
             this.groupBox1.Controls.Add(this.uiHollandRadioButton);
-            this.groupBox1.Location = new System.Drawing.Point(-111, 9);
+            this.groupBox1.Location = new System.Drawing.Point(22, 13);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(104, 91);
             this.groupBox1.TabIndex = 16;
@@ -176,7 +176,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(334, 53);
+            this.label5.Location = new System.Drawing.Point(467, 57);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(135, 13);
             this.label5.TabIndex = 18;
@@ -184,7 +184,7 @@
             // 
             // oiChanseTextBox
             // 
-            this.oiChanseTextBox.Location = new System.Drawing.Point(334, 69);
+            this.oiChanseTextBox.Location = new System.Drawing.Point(467, 73);
             this.oiChanseTextBox.Name = "oiChanseTextBox";
             this.oiChanseTextBox.Size = new System.Drawing.Size(100, 20);
             this.oiChanseTextBox.TabIndex = 17;
