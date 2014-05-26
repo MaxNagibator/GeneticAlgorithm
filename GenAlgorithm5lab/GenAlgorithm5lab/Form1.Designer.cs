@@ -45,6 +45,8 @@
             this.oiChanseTextBox = new System.Windows.Forms.TextBox();
             this.uiOutTextBox = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.uiTotalCountTextBox = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -86,7 +88,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(336, 56);
+            this.label2.Location = new System.Drawing.Point(278, 13);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(113, 13);
             this.label2.TabIndex = 9;
@@ -94,7 +96,7 @@
             // 
             // krosChanseTextBox
             // 
-            this.krosChanseTextBox.Location = new System.Drawing.Point(336, 72);
+            this.krosChanseTextBox.Location = new System.Drawing.Point(278, 29);
             this.krosChanseTextBox.Name = "krosChanseTextBox";
             this.krosChanseTextBox.Size = new System.Drawing.Size(100, 20);
             this.krosChanseTextBox.TabIndex = 8;
@@ -103,7 +105,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(467, 18);
+            this.label4.Location = new System.Drawing.Point(401, 17);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(78, 13);
             this.label4.TabIndex = 11;
@@ -111,7 +113,7 @@
             // 
             // omChanseTextBox
             // 
-            this.omChanseTextBox.Location = new System.Drawing.Point(467, 34);
+            this.omChanseTextBox.Location = new System.Drawing.Point(401, 33);
             this.omChanseTextBox.Name = "omChanseTextBox";
             this.omChanseTextBox.Size = new System.Drawing.Size(100, 20);
             this.omChanseTextBox.TabIndex = 10;
@@ -119,9 +121,9 @@
             // 
             // uiExecuteButton
             // 
-            this.uiExecuteButton.Location = new System.Drawing.Point(620, 26);
+            this.uiExecuteButton.Location = new System.Drawing.Point(773, 26);
             this.uiExecuteButton.Name = "uiExecuteButton";
-            this.uiExecuteButton.Size = new System.Drawing.Size(311, 67);
+            this.uiExecuteButton.Size = new System.Drawing.Size(158, 67);
             this.uiExecuteButton.TabIndex = 12;
             this.uiExecuteButton.Text = "execute";
             this.uiExecuteButton.UseVisualStyleBackColor = true;
@@ -176,7 +178,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(467, 57);
+            this.label5.Location = new System.Drawing.Point(401, 56);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(135, 13);
             this.label5.TabIndex = 18;
@@ -184,7 +186,7 @@
             // 
             // oiChanseTextBox
             // 
-            this.oiChanseTextBox.Location = new System.Drawing.Point(467, 73);
+            this.oiChanseTextBox.Location = new System.Drawing.Point(401, 72);
             this.oiChanseTextBox.Name = "oiChanseTextBox";
             this.oiChanseTextBox.Size = new System.Drawing.Size(100, 20);
             this.oiChanseTextBox.TabIndex = 17;
@@ -202,6 +204,8 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label6);
+            this.panel1.Controls.Add(this.uiTotalCountTextBox);
             this.panel1.Controls.Add(this.uiExecuteButton);
             this.panel1.Controls.Add(this.personCountTextBox);
             this.panel1.Controls.Add(this.label5);
@@ -219,6 +223,23 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1011, 119);
             this.panel1.TabIndex = 20;
+            // 
+            // uiTotalCountTextBox
+            // 
+            this.uiTotalCountTextBox.Location = new System.Drawing.Point(573, 26);
+            this.uiTotalCountTextBox.Name = "uiTotalCountTextBox";
+            this.uiTotalCountTextBox.Size = new System.Drawing.Size(100, 20);
+            this.uiTotalCountTextBox.TabIndex = 19;
+            this.uiTotalCountTextBox.Text = "5";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(570, 10);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(134, 13);
+            this.label6.TabIndex = 20;
+            this.label6.Text = "сколько раз выполнить?";
             // 
             // Form1
             // 
@@ -257,6 +278,8 @@
         private System.Windows.Forms.TextBox oiChanseTextBox;
         private System.Windows.Forms.TextBox uiOutTextBox;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TextBox uiTotalCountTextBox;
+        private System.Windows.Forms.Label label6;
     }
 }
 
