@@ -25,7 +25,8 @@ namespace GenAlgorithm5lab
 
         public static string Show(int personCount, int tMax, int krosChanse, int omChanse, int oiChanse)
         {
-            _textOut ="Девис"+Environment.NewLine;
+            _textOut = "Девис" + Environment.NewLine;
+            _personCount = personCount;
             _krosChanse = krosChanse;
             //в) max функции f(x) = 3x3 - 2x + 5 на интервале [1 - 10];
             GenerateNotUniquePopulation(0, 1);

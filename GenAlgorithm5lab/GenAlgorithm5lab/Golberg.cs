@@ -27,6 +27,7 @@ namespace GenAlgorithm5lab
         {
             _textOut = "Голдберг" + Environment.NewLine;
             _krosChanse = krosChanse;
+            _personCount = personCount;
             //в) max функции f(x) = 3x3 - 2x + 5 на интервале [1 - 10];
             GenerateNotUniquePopulation(0, 1);
             var t = 0;

@@ -119,5 +119,6 @@ namespace GenAlgorithm5lab
             }
             return str;
         }
+
     }
 }
