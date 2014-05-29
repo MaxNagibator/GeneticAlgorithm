@@ -43,6 +43,7 @@
             this.oiChanseTextBox = new System.Windows.Forms.TextBox();
             this.omChanseTextBox = new System.Windows.Forms.TextBox();
             this.uiOutTextBox = new System.Windows.Forms.TextBox();
+            this.uiKriteriyTextBox = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -181,23 +182,34 @@
             // 
             // uiOutTextBox
             // 
-            this.uiOutTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.uiOutTextBox.Dock = System.Windows.Forms.DockStyle.Left;
             this.uiOutTextBox.Location = new System.Drawing.Point(0, 119);
             this.uiOutTextBox.Multiline = true;
             this.uiOutTextBox.Name = "uiOutTextBox";
             this.uiOutTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.uiOutTextBox.Size = new System.Drawing.Size(989, 434);
+            this.uiOutTextBox.Size = new System.Drawing.Size(720, 434);
             this.uiOutTextBox.TabIndex = 21;
+            // 
+            // uiKriteriyTextBox
+            // 
+            this.uiKriteriyTextBox.Dock = System.Windows.Forms.DockStyle.Right;
+            this.uiKriteriyTextBox.Location = new System.Drawing.Point(856, 119);
+            this.uiKriteriyTextBox.Multiline = true;
+            this.uiKriteriyTextBox.Name = "uiKriteriyTextBox";
+            this.uiKriteriyTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.uiKriteriyTextBox.Size = new System.Drawing.Size(133, 434);
+            this.uiKriteriyTextBox.TabIndex = 23;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(989, 553);
+            this.Controls.Add(this.uiKriteriyTextBox);
             this.Controls.Add(this.uiOutTextBox);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "курсач";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -222,6 +234,7 @@
         private System.Windows.Forms.TextBox oiChanseTextBox;
         private System.Windows.Forms.TextBox omChanseTextBox;
         private System.Windows.Forms.TextBox uiOutTextBox;
+        private System.Windows.Forms.TextBox uiKriteriyTextBox;
     }
 }
 
