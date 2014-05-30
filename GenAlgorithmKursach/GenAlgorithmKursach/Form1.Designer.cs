@@ -39,12 +39,21 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.uiGenCountTextBox = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.linkChanseTextBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.oiChanseTextBox = new System.Windows.Forms.TextBox();
             this.omChanseTextBox = new System.Windows.Forms.TextBox();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.uiOutTextBox = new System.Windows.Forms.TextBox();
             this.uiKriteriyTextBox = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label6
@@ -76,7 +85,7 @@
             // 
             // personCountTextBox
             // 
-            this.personCountTextBox.Location = new System.Drawing.Point(132, 34);
+            this.personCountTextBox.Location = new System.Drawing.Point(135, 34);
             this.personCountTextBox.Name = "personCountTextBox";
             this.personCountTextBox.Size = new System.Drawing.Size(100, 20);
             this.personCountTextBox.TabIndex = 0;
@@ -85,7 +94,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(132, 18);
+            this.label1.Location = new System.Drawing.Point(135, 18);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(130, 13);
             this.label1.TabIndex = 4;
@@ -136,6 +145,10 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.uiGenCountTextBox);
+            this.panel1.Controls.Add(this.label8);
+            this.panel1.Controls.Add(this.label7);
+            this.panel1.Controls.Add(this.linkChanseTextBox);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.uiTotalCountTextBox);
             this.panel1.Controls.Add(this.uiExecuteButton);
@@ -152,8 +165,42 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(989, 119);
+            this.panel1.Size = new System.Drawing.Size(989, 113);
             this.panel1.TabIndex = 22;
+            // 
+            // uiGenCountTextBox
+            // 
+            this.uiGenCountTextBox.Location = new System.Drawing.Point(26, 34);
+            this.uiGenCountTextBox.Name = "uiGenCountTextBox";
+            this.uiGenCountTextBox.Size = new System.Drawing.Size(77, 20);
+            this.uiGenCountTextBox.TabIndex = 23;
+            this.uiGenCountTextBox.Text = "8";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(12, 18);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(97, 13);
+            this.label8.TabIndex = 24;
+            this.label8.Text = "количество генов";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(573, 57);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(155, 13);
+            this.label7.TabIndex = 22;
+            this.label7.Text = "шанс связи между звеньями";
+            // 
+            // linkChanseTextBox
+            // 
+            this.linkChanseTextBox.Location = new System.Drawing.Point(573, 73);
+            this.linkChanseTextBox.Name = "linkChanseTextBox";
+            this.linkChanseTextBox.Size = new System.Drawing.Size(100, 20);
+            this.linkChanseTextBox.TabIndex = 21;
+            this.linkChanseTextBox.Text = "70";
             // 
             // label5
             // 
@@ -180,40 +227,61 @@
             this.omChanseTextBox.TabIndex = 10;
             this.omChanseTextBox.Text = "5";
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 113);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.uiOutTextBox);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.uiKriteriyTextBox);
+            this.splitContainer1.Size = new System.Drawing.Size(989, 440);
+            this.splitContainer1.SplitterDistance = 682;
+            this.splitContainer1.TabIndex = 24;
+            // 
             // uiOutTextBox
             // 
-            this.uiOutTextBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.uiOutTextBox.Location = new System.Drawing.Point(0, 119);
+            this.uiOutTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.uiOutTextBox.Location = new System.Drawing.Point(0, 0);
             this.uiOutTextBox.Multiline = true;
             this.uiOutTextBox.Name = "uiOutTextBox";
             this.uiOutTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.uiOutTextBox.Size = new System.Drawing.Size(720, 434);
-            this.uiOutTextBox.TabIndex = 21;
+            this.uiOutTextBox.Size = new System.Drawing.Size(682, 440);
+            this.uiOutTextBox.TabIndex = 22;
             // 
             // uiKriteriyTextBox
             // 
             this.uiKriteriyTextBox.Dock = System.Windows.Forms.DockStyle.Right;
-            this.uiKriteriyTextBox.Location = new System.Drawing.Point(856, 119);
+            this.uiKriteriyTextBox.Location = new System.Drawing.Point(170, 0);
             this.uiKriteriyTextBox.Multiline = true;
             this.uiKriteriyTextBox.Name = "uiKriteriyTextBox";
             this.uiKriteriyTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.uiKriteriyTextBox.Size = new System.Drawing.Size(133, 434);
-            this.uiKriteriyTextBox.TabIndex = 23;
+            this.uiKriteriyTextBox.Size = new System.Drawing.Size(133, 440);
+            this.uiKriteriyTextBox.TabIndex = 24;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(989, 553);
-            this.Controls.Add(this.uiKriteriyTextBox);
-            this.Controls.Add(this.uiOutTextBox);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.panel1);
             this.Name = "Form1";
             this.Text = "курсач";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -233,6 +301,11 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox oiChanseTextBox;
         private System.Windows.Forms.TextBox omChanseTextBox;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox linkChanseTextBox;
+        private System.Windows.Forms.TextBox uiGenCountTextBox;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TextBox uiOutTextBox;
         private System.Windows.Forms.TextBox uiKriteriyTextBox;
     }

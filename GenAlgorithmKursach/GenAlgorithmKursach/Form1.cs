@@ -23,11 +23,13 @@ namespace GenAlgorithmKursach
             int personCount = Convert.ToInt32(personCountTextBox.Text);
             var tMax = Convert.ToInt32(tMaxTextBox.Text);
             var krosChanse = Convert.ToInt32(krosChanseTextBox.Text);
+            var linkChanse = Convert.ToInt32(linkChanseTextBox.Text);
             var omChanse = Convert.ToInt32(omChanseTextBox.Text);
             var oiChanse = Convert.ToInt32(oiChanseTextBox.Text);
-            var matricaSmezhnosti = GenerateMatricaSmezhnosti(personCount);
-            var text = MatrixShow(matricaSmezhnosti, "матрица смежности: ", personCount);
-            var popul = GenerateUniquePopulation(personCount+100, personCount, 0, personCount - 1);
+            var genCount = Convert.ToInt32(uiGenCountTextBox.Text);
+            var matricaSmezhnosti = GenerateMatricaSmezhnosti(genCount, linkChanse);
+            var text = MatrixShow(matricaSmezhnosti, "матрица смежности: ", genCount);
+            var popul = GenerateUniquePopulation(personCount, genCount, 0, genCount - 1);
             text += PopulationsShow("популяшки: ", popul);
             var krit = GetKriteriy(popul, matricaSmezhnosti);
             text += PopulationShow(krit, "kriteruii:") + Environment.NewLine;
@@ -36,6 +38,8 @@ namespace GenAlgorithmKursach
 
             var maxKriteriy = new List<int>();
             var avgKriteriy = new List<double>();
+            maxKriteriy.Add(krit.Max());
+            avgKriteriy.Add(krit.Average());
             var t = 0;
             while (t < tMax)
             {
@@ -48,18 +52,27 @@ namespace GenAlgorithmKursach
                 avgKriteriy.Add(krit.Average());
                 string razrivStr;
                 popul = GetAfterCrossingover2(popul, krosChanse, out razrivStr);
-                text += PopulationsShow("После кроссинговера Одноточечного " + razrivStr, popul);
+                //text += PopulationsShow("После кроссинговера Одноточечного " + razrivStr, popul);
                 string mutStr;
                 popul = GetAfterMutation(popul, omChanse, out mutStr);
-                text += PopulationsShow("После мутации одноточечной " + mutStr, popul);
+                //text += PopulationsShow("После мутации одноточечной " + mutStr, popul);
                 string mutInvStr;
                 popul = GetAfterMutationInverse(popul, oiChanse, out mutInvStr);
-                text += PopulationsShow("После мутации инверсией " + mutInvStr, popul);
+                //text += PopulationsShow("После мутации инверсией " + mutInvStr, popul);
                 uiOutTextBox.Text = text;
                 t++;
             }
-
+            
             var endMax = krit.Max();
+            for(int i = 0; i< krit.Count;i++)
+            {
+                if(krit[i]==endMax)
+                {
+                    uiOutTextBox.Text+= Environment.NewLine+PopulationsShow("лучшая популяция ", new List<List<int>>{popul[i]});
+                    uiOutTextBox.Text += " с критерием = " + endMax;
+                    break;
+                }
+            }
 
             uiKriteriyTextBox.Text = startMax + " " + endMax + Environment.NewLine + Environment.NewLine;
             for (int i = 0; i < maxKriteriy.Count; i++)
@@ -219,7 +232,7 @@ namespace GenAlgorithmKursach
             return krit;
         }
 
-        private static int[][] GenerateMatricaSmezhnosti(int personCount)
+        private static int[][] GenerateMatricaSmezhnosti(int personCount, int linkChanse)
         {
             var rnd = new Random();
             var matricaSmezhnosti = new int[personCount][];
@@ -234,7 +247,6 @@ namespace GenAlgorithmKursach
                 for (int j = i + 1; j < personCount; j++)
                 {
                     var k = rnd.Next(0, 100);
-                    var linkChanse = 70;
                     var value = k<linkChanse ? 1 : 0;
                     matricaSmezhnosti[i][j] = value;
                     matricaSmezhnosti[j][i] = value;
@@ -245,15 +257,15 @@ namespace GenAlgorithmKursach
 
         private static string MatrixShow(int[][] matricaSmezhnosti, string str, int personCount)
         {
-            str += Environment.NewLine + " \\ ";
-            for (int j = 0; j < personCount; j++)
-            {
-                str += String.Format("{0,4} ", j);
-            }
+            //str += Environment.NewLine + " \\ ";
+            //for (int j = 0; j < personCount; j++)
+            //{
+            //    str += String.Format("{0,4} ", j);
+            //}
             str += Environment.NewLine;
             for (int i = 0; i < personCount; i++)
             {
-                str += i + ": ";
+                str += String.Format("{0,4} ", i + ": ");
                 str += PopulationShow(matricaSmezhnosti[i].ToList());
                 str += Environment.NewLine;
             }
