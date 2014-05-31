@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GenAlgorithmKursach
@@ -20,13 +14,7 @@ namespace GenAlgorithmKursach
 
         private void uiExecuteButton_Click(object sender, EventArgs e)
         {
-            var startDate = DateTime.Now;
-            var selectDates = new List<TimeSpan>();
-            var kritDates = new List<TimeSpan>();
-            var krosDates = new List<TimeSpan>();
-            var mutDates = new List<TimeSpan>();
-            var mutInversDates = new List<TimeSpan>();
-
+            int experementCount = Convert.ToInt32(uiTotalCountTextBox.Text);
             int personCount = Convert.ToInt32(personCountTextBox.Text);
             var tMax = Convert.ToInt32(tMaxTextBox.Text);
             var krosChanse = Convert.ToInt32(krosChanseTextBox.Text);
@@ -34,59 +22,89 @@ namespace GenAlgorithmKursach
             var omChanse = Convert.ToInt32(omChanseTextBox.Text);
             var oiChanse = Convert.ToInt32(oiChanseTextBox.Text);
             var genCount = Convert.ToInt32(uiGenCountTextBox.Text);
-            var matricaSmezhnosti = GenerateMatricaSmezhnosti(genCount, linkChanse);
-            var text = MatrixShow(matricaSmezhnosti, "матрица смежности: ", genCount);
-            var popul = GenerateUniquePopulation(personCount, genCount, 0, genCount - 1);
-            text += PopulationsShow("популяшки: ", popul);
-            var krit = GetKriteriy(popul, matricaSmezhnosti);
-            text += PopulationShow(krit, "kriteruii:") + Environment.NewLine;
-            text += "max kriter: " + krit.Max() + Environment.NewLine;
-            var startMax = krit.Max();
 
-            var maxKriteriy = new List<int>();
-            var avgKriteriy = new List<double>();
-            maxKriteriy.Add(krit.Max());
-            avgKriteriy.Add(krit.Average());
-            var t = 0;
-            while (t < tMax)
+
+            var selectDates = new List<TimeSpan>();
+            var kritDates = new List<TimeSpan>();
+            var krosDates = new List<TimeSpan>();
+            var mutDates = new List<TimeSpan>();
+            var mutInversDates = new List<TimeSpan>();
+
+            for (int xa = 0; xa < experementCount; xa++)
             {
-                var temp = DateTime.Now;
-                popul = GetAfterSelection2(popul, krit);
-                text += PopulationsShow("После селекции рулеточкой: ", popul);
-                selectDates.Add(DateTime.Now - temp);
-
-                temp = DateTime.Now;
-                krit = GetKriteriy(popul, matricaSmezhnosti);
-                kritDates.Add(DateTime.Now - temp);
-                
+                var matricaSmezhnosti = GenerateMatricaSmezhnosti(genCount, linkChanse);
+                var text = MatrixShow(matricaSmezhnosti, "матрица смежности: ", genCount);
+                var popul = GenerateUniquePopulation(personCount, genCount, 0, genCount - 1);
+                text += PopulationsShow("популяшки: ", popul);
+                var krit = GetKriteriy(popul, matricaSmezhnosti);
                 text += PopulationShow(krit, "kriteruii:") + Environment.NewLine;
-                text += "max kriter: " + krit.Max() + "avg:" + krit.Average() + Environment.NewLine;
+                text += "max kriter: " + krit.Max() + Environment.NewLine;
+                var startMax = krit.Max();
+
+                var maxKriteriy = new List<int>();
+                var avgKriteriy = new List<double>();
                 maxKriteriy.Add(krit.Max());
                 avgKriteriy.Add(krit.Average());
+                var t = 0;
+                while (t < tMax)
+                {
+                    var temp = DateTime.Now;
+                    popul = GetAfterSelection2(popul, krit);
+                    text += PopulationsShow("После селекции рулеточкой: ", popul);
+                    selectDates.Add(DateTime.Now - temp);
 
-                temp = DateTime.Now;
-                string razrivStr;
-                popul = GetAfterCrossingover2(popul, krosChanse, out razrivStr);
-                //text += PopulationsShow("После кроссинговера Одноточечного " + razrivStr, popul);
-                krosDates.Add(DateTime.Now-temp);
+                    temp = DateTime.Now;
+                    krit = GetKriteriy(popul, matricaSmezhnosti);
+                    kritDates.Add(DateTime.Now - temp);
 
-                string mutStr;
-                temp = DateTime.Now;
-                popul = GetAfterMutation(popul, omChanse, out mutStr);
-                //text += PopulationsShow("После мутации одноточечной " + mutStr, popul);
-                mutDates.Add(DateTime.Now - temp);
+                    text += PopulationShow(krit, "kriteruii:") + Environment.NewLine;
+                    text += "max kriter: " + krit.Max() + "avg:" + krit.Average() + Environment.NewLine;
+                    maxKriteriy.Add(krit.Max());
+                    avgKriteriy.Add(krit.Average());
 
-                string mutInvStr;
-                temp = DateTime.Now;
-                popul = GetAfterMutationInverse(popul, oiChanse, out mutInvStr);
-                mutInversDates.Add(DateTime.Now - temp);
-                //text += PopulationsShow("После мутации инверсией " + mutInvStr, popul);
-                t++;
+                    temp = DateTime.Now;
+                    string razrivStr;
+                    popul = GetAfterCrossingover2(popul, krosChanse, out razrivStr);
+                    //text += PopulationsShow("После кроссинговера Одноточечного " + razrivStr, popul);
+                    krosDates.Add(DateTime.Now - temp);
+
+                    string mutStr;
+                    temp = DateTime.Now;
+                    popul = GetAfterMutation(popul, omChanse, out mutStr);
+                    //text += PopulationsShow("После мутации одноточечной " + mutStr, popul);
+                    mutDates.Add(DateTime.Now - temp);
+
+                    string mutInvStr;
+                    temp = DateTime.Now;
+                    popul = GetAfterMutationInverse(popul, oiChanse, out mutInvStr);
+                    mutInversDates.Add(DateTime.Now - temp);
+                    //text += PopulationsShow("После мутации инверсией " + mutInvStr, popul);
+                    t++;
+                }
+                if (checkBox1.Checked)
+                {
+                    uiOutTextBox.Text = text;
+                }
+
+                var endMax = krit.Max();
+                for (int i = 0; i < krit.Count; i++)
+                {
+                    if (krit[i] == endMax)
+                    {
+                        uiOutTextBox.Text += Environment.NewLine +
+                                             PopulationsShow("лучшая популяция ", new List<List<int>> {popul[i]});
+                        uiOutTextBox.Text += " с критерием = " + endMax;
+                        break;
+                    }
+                }
+
+                uiKriteriyTextBox.Text = startMax + " " + endMax + Environment.NewLine + Environment.NewLine;
+                for (int i = 0; i < maxKriteriy.Count; i++)
+                {
+                    uiKriteriyTextBox.Text += maxKriteriy[i] + " " + avgKriteriy[i] + Environment.NewLine;
+                }
             }
-            //if (checkBox1.Checked)
-            {
-                uiOutTextBox.Text = text;
-            }
+
             var totalDate = new TimeSpan();
             var selectDatesSum = new TimeSpan();
             foreach (var d in selectDates)
@@ -113,31 +131,15 @@ namespace GenAlgorithmKursach
             {
                 mutInversDatesSum += d;
             }
-            uiTimeTextBox.Text = "";
+            uiTimeTextBox.Text = "среднее время на " + experementCount + " опытов" + Environment.NewLine;
             totalDate += selectDatesSum + kritDatesSum + krosDatesSum + mutDatesSum + mutInversDatesSum;
-            uiTimeTextBox.Text += "Селекция: " + selectDatesSum + Environment.NewLine;
-            uiTimeTextBox.Text += "Определение критерия: " + kritDatesSum + Environment.NewLine;
-            uiTimeTextBox.Text += "Кроссинговер: " + krosDatesSum + Environment.NewLine;
-            uiTimeTextBox.Text += "Мутация: " + mutDatesSum + Environment.NewLine;
-            uiTimeTextBox.Text += "Мутация инверсией: " + mutInversDatesSum + Environment.NewLine;
-            uiTimeTextBox.Text += "Всего: " + totalDate + Environment.NewLine;
             Text = totalDate.ToString();
-            var endMax = krit.Max();
-            for(int i = 0; i< krit.Count;i++)
-            {
-                if(krit[i]==endMax)
-                {
-                    uiOutTextBox.Text+= Environment.NewLine+PopulationsShow("лучшая популяция ", new List<List<int>>{popul[i]});
-                    uiOutTextBox.Text += " с критерием = " + endMax;
-                    break;
-                }
-            }
-
-            uiKriteriyTextBox.Text = startMax + " " + endMax + Environment.NewLine + Environment.NewLine;
-            for (int i = 0; i < maxKriteriy.Count; i++)
-            {
-                uiKriteriyTextBox.Text += maxKriteriy[i] + " " + avgKriteriy[i] + Environment.NewLine;
-            }
+            uiTimeTextBox.Text += TimeSpan.FromTicks(selectDatesSum.Ticks / experementCount).TotalMilliseconds +Environment.NewLine;
+            uiTimeTextBox.Text += TimeSpan.FromTicks(kritDatesSum.Ticks / experementCount).TotalMilliseconds + Environment.NewLine;
+            uiTimeTextBox.Text += TimeSpan.FromTicks(krosDatesSum.Ticks / experementCount).TotalMilliseconds + Environment.NewLine;
+            uiTimeTextBox.Text += TimeSpan.FromTicks(mutDatesSum.Ticks / experementCount).TotalMilliseconds + Environment.NewLine;
+            uiTimeTextBox.Text += TimeSpan.FromTicks(mutInversDatesSum.Ticks / experementCount).TotalMilliseconds + Environment.NewLine;
+            uiTimeTextBox.Text += TimeSpan.FromTicks(totalDate.Ticks / experementCount).TotalMilliseconds + Environment.NewLine;
         }
 
 
@@ -167,7 +169,8 @@ namespace GenAlgorithmKursach
                         }
                     }
                     populationAfterMuttation.Add(newGenMuta);
-                }else
+                }
+                else
                 {
                     populationAfterMuttation.Add(popul[i]);
                 }
