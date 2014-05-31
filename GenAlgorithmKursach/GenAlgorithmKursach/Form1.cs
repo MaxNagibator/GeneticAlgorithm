@@ -20,6 +20,13 @@ namespace GenAlgorithmKursach
 
         private void uiExecuteButton_Click(object sender, EventArgs e)
         {
+            var startDate = DateTime.Now;
+            var selectDates = new List<TimeSpan>();
+            var kritDates = new List<TimeSpan>();
+            var krosDates = new List<TimeSpan>();
+            var mutDates = new List<TimeSpan>();
+            var mutInversDates = new List<TimeSpan>();
+
             int personCount = Convert.ToInt32(personCountTextBox.Text);
             var tMax = Convert.ToInt32(tMaxTextBox.Text);
             var krosChanse = Convert.ToInt32(krosChanseTextBox.Text);
@@ -43,26 +50,78 @@ namespace GenAlgorithmKursach
             var t = 0;
             while (t < tMax)
             {
+                var temp = DateTime.Now;
                 popul = GetAfterSelection2(popul, krit);
                 text += PopulationsShow("После селекции рулеточкой: ", popul);
+                selectDates.Add(DateTime.Now - temp);
+
+                temp = DateTime.Now;
                 krit = GetKriteriy(popul, matricaSmezhnosti);
+                kritDates.Add(DateTime.Now - temp);
+                
                 text += PopulationShow(krit, "kriteruii:") + Environment.NewLine;
                 text += "max kriter: " + krit.Max() + "avg:" + krit.Average() + Environment.NewLine;
                 maxKriteriy.Add(krit.Max());
                 avgKriteriy.Add(krit.Average());
+
+                temp = DateTime.Now;
                 string razrivStr;
                 popul = GetAfterCrossingover2(popul, krosChanse, out razrivStr);
                 //text += PopulationsShow("После кроссинговера Одноточечного " + razrivStr, popul);
+                krosDates.Add(DateTime.Now-temp);
+
                 string mutStr;
+                temp = DateTime.Now;
                 popul = GetAfterMutation(popul, omChanse, out mutStr);
                 //text += PopulationsShow("После мутации одноточечной " + mutStr, popul);
+                mutDates.Add(DateTime.Now - temp);
+
                 string mutInvStr;
+                temp = DateTime.Now;
                 popul = GetAfterMutationInverse(popul, oiChanse, out mutInvStr);
+                mutInversDates.Add(DateTime.Now - temp);
                 //text += PopulationsShow("После мутации инверсией " + mutInvStr, popul);
-                uiOutTextBox.Text = text;
                 t++;
             }
-            
+            //if (checkBox1.Checked)
+            {
+                uiOutTextBox.Text = text;
+            }
+            var totalDate = new TimeSpan();
+            var selectDatesSum = new TimeSpan();
+            foreach (var d in selectDates)
+            {
+                selectDatesSum += d;
+            }
+            var kritDatesSum = new TimeSpan();
+            foreach (var d in kritDates)
+            {
+                kritDatesSum += d;
+            }
+            var krosDatesSum = new TimeSpan();
+            foreach (var d in krosDates)
+            {
+                krosDatesSum += d;
+            }
+            var mutDatesSum = new TimeSpan();
+            foreach (var d in mutDates)
+            {
+                mutDatesSum += d;
+            }
+            var mutInversDatesSum = new TimeSpan();
+            foreach (var d in mutInversDates)
+            {
+                mutInversDatesSum += d;
+            }
+            uiTimeTextBox.Text = "";
+            totalDate += selectDatesSum + kritDatesSum + krosDatesSum + mutDatesSum + mutInversDatesSum;
+            uiTimeTextBox.Text += "Селекция: " + selectDatesSum + Environment.NewLine;
+            uiTimeTextBox.Text += "Определение критерия: " + kritDatesSum + Environment.NewLine;
+            uiTimeTextBox.Text += "Кроссинговер: " + krosDatesSum + Environment.NewLine;
+            uiTimeTextBox.Text += "Мутация: " + mutDatesSum + Environment.NewLine;
+            uiTimeTextBox.Text += "Мутация инверсией: " + mutInversDatesSum + Environment.NewLine;
+            uiTimeTextBox.Text += "Всего: " + totalDate + Environment.NewLine;
+            Text = totalDate.ToString();
             var endMax = krit.Max();
             for(int i = 0; i< krit.Count;i++)
             {
@@ -354,20 +413,6 @@ namespace GenAlgorithmKursach
             return parentForKrossingover;
         }
 
-        private List<List<int>> GetAfterSelection(List<List<int>> population, List<int> populationSelectionKriteriy)
-        {
-            var populationAfterSelection = new List<List<int>>();
 
-            var populationOfLifeKriteriy = populationSelectionKriteriy.OrderBy(p => p).ToList();
-            populationOfLifeKriteriy.RemoveRange(0, populationOfLifeKriteriy.Count/2);
-            for (int i = 0; i < population.Count; i++)
-            {
-                if (populationOfLifeKriteriy.Exists(k => k == populationSelectionKriteriy[i]))
-                {
-                    populationAfterSelection.Add(population[i]);
-                }
-            }
-            return populationAfterSelection;
-        }
     }
 }

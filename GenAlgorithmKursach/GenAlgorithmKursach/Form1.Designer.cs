@@ -49,6 +49,8 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.uiOutTextBox = new System.Windows.Forms.TextBox();
             this.uiKriteriyTextBox = new System.Windows.Forms.TextBox();
+            this.uiTimeTextBox = new System.Windows.Forms.TextBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -145,6 +147,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.checkBox1);
             this.panel1.Controls.Add(this.uiGenCountTextBox);
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label7);
@@ -239,6 +242,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.uiTimeTextBox);
             this.splitContainer1.Panel2.Controls.Add(this.uiKriteriyTextBox);
             this.splitContainer1.Size = new System.Drawing.Size(989, 440);
             this.splitContainer1.SplitterDistance = 682;
@@ -256,13 +260,35 @@
             // 
             // uiKriteriyTextBox
             // 
-            this.uiKriteriyTextBox.Dock = System.Windows.Forms.DockStyle.Right;
-            this.uiKriteriyTextBox.Location = new System.Drawing.Point(170, 0);
+            this.uiKriteriyTextBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.uiKriteriyTextBox.Location = new System.Drawing.Point(0, 0);
             this.uiKriteriyTextBox.Multiline = true;
             this.uiKriteriyTextBox.Name = "uiKriteriyTextBox";
             this.uiKriteriyTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.uiKriteriyTextBox.Size = new System.Drawing.Size(133, 440);
+            this.uiKriteriyTextBox.Size = new System.Drawing.Size(303, 214);
             this.uiKriteriyTextBox.TabIndex = 24;
+            // 
+            // uiTimeTextBox
+            // 
+            this.uiTimeTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.uiTimeTextBox.Location = new System.Drawing.Point(0, 214);
+            this.uiTimeTextBox.Multiline = true;
+            this.uiTimeTextBox.Name = "uiTimeTextBox";
+            this.uiTimeTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.uiTimeTextBox.Size = new System.Drawing.Size(303, 226);
+            this.uiTimeTextBox.TabIndex = 25;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Location = new System.Drawing.Point(3, 93);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(109, 17);
+            this.checkBox1.TabIndex = 25;
+            this.checkBox1.Text = "выводить инфу?";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -308,6 +334,8 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TextBox uiOutTextBox;
         private System.Windows.Forms.TextBox uiKriteriyTextBox;
+        private System.Windows.Forms.TextBox uiTimeTextBox;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 
